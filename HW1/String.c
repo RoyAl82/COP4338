@@ -54,27 +54,31 @@ char String_GetChar(const String *strObj,const size_t index)
 
 int String_Append(String * strObj, char * strAppend)
 {
-    size_t nlen = String_ChrLen(strAppend);
-    
-    char * tmp = (char *)realloc(strObj->str, sizeof(char) *(strObj->size + nlen + 1));
-    
-    if(tmp != NULL)
+    if(strObj && strObj->str)
     {
-        size_t lastLen = strObj->size;
-        strObj->str = tmp;
-        strObj->size = strObj->size + nlen;
+        size_t nlen = String_ChrLen(strAppend);
         
-        size_t size = strObj->size;
+        char * tmp = (char *)realloc(strObj->str, sizeof(char) *(strObj->size + nlen + 1));
         
-        for(size_t i = lastLen, j = 0; i < size && j < nlen; i++, j++)
-            strObj->str[i] = strAppend[j];
-        
-        strObj->hashcode = String_CreateHash(strObj->str);
-        
-        return 1;
+        if(!tmp)
+        {
+            size_t lastLen = strObj->size;
+            strObj->str = tmp;
+            strObj->size = strObj->size + nlen;
+            
+            size_t size = strObj->size;
+            
+            for(size_t i = lastLen, j = 0; i < size && j < nlen; i++, j++)
+                strObj->str[i] = strAppend[j];
+            
+            strObj->hashcode = String_CreateHash(strObj->str);
+            
+            return 1;
+        }
+
     }
     
-    return 0;
+    return -3;
     
 }
 
@@ -145,15 +149,19 @@ String * String_Cpy ( String * destination, const String * source )
 {
     if(!destination || !source)
         return NULL;
-    free(destination->str);
-    destination->str = (char *) malloc(sizeof(char) * (source->size + 1));
     
-    if(destination->str)
+    char * temp = (char *) realloc(destination->str, sizeof(char) * (source->size + 1));
+    
+    if(!temp)
+        return NULL;
+   
+    if(temp)
     {
         int i;
         for(i = 0; i < source->size; i++)
-            destination->str[i] = source->str[i];
+            temp[i] = source->str[i];
         
+        destination->str = temp;
         destination->size = source->size;
         destination->hashcode = String_CreateHash(destination->str);
         
@@ -167,15 +175,19 @@ String * String_Cpy ( String * destination, const String * source )
 
 String * String_nCpy ( String * destination, const String * source, size_t num )
 {
-    if(!source || !source->str || !destination || num > source->size)
+    if(!source || !source->str || !destination || !destination->str || num >= source->size)
         return NULL;
     
-    if(destination->str)
-        free(destination->str);
-    destination->str = (char * ) malloc(sizeof(char) * (num + 1) );
+    
+    char * temp = (char * ) realloc(destination->str, sizeof(char) * (num + 1) );
+    
+    if(!temp)
+        return NULL;
+    
     int i;
     for(i = 0; i < num; i++)
-        destination->str[i] = source->str[i];
+        temp[i] = source->str[i];
+    destination->str = temp;
     destination->size = num;
     destination->hashcode = String_CreateHash(destination->str);
     
@@ -188,115 +200,168 @@ String * String_Cat ( String * destination, const String * source )
     if(!source || !source->str || !destination || !destination->str )
         return NULL;
     
-    String * temp = (String *) malloc(sizeof(String));
+    char * temp = (char *) realloc(destination->str, sizeof(char) *
+                                   (destination->size + source->size + 1));
+    
     if(!temp)
         return NULL;
-    temp->str = (char*) malloc(sizeof(char) * (destination->size + source->size + 1));
     
-    
-    
-    if(!temp->str)
-        return NULL;
     size_t initial = destination->size;
-    
-    for(int index = 0; index < (initial + 1); index++)
-        temp->str[index] = destination->str[index];
     
     size_t i,j;
     size_t scSize = source->size;
-    temp->size = source->size + destination->size;
+    for(i = 0; i < initial; i++)
+        temp[i] = destination->str[i];
     
     for(i = initial, j = 0; j < scSize; i++, j++)
-        temp->str[i] = source->str[j];
+        temp[i] = source->str[j];
     
+    destination->str = temp;
+    destination->size += scSize;
+    destination->hashcode = String_CreateHash(destination->str);
     
-    temp->hashcode = String_CreateHash(temp->str);
-    
-    return temp;
+    return destination;
 }
 
 String * String_nCat ( String * destination, const String * source, size_t num )
 {
-    String * temp = (String *) malloc(sizeof(String));
+   if(!source || !source->str || !destination || !destination->str ||
+      num >= (source->size + destination->size))
+       return NULL;
     
-    temp->str = (char *) malloc(sizeof(char));
+    char * temp = (char * ) realloc(destination->str, sizeof(char) * (num + 1));
     
+    if(temp)
+    {
+        size_t i, j, k;
+        
+        for(i = 0; i < destination->size && i < num; i++)
+            temp[i] = destination->str[i];
+        
+        for(j = i, k = 0; j < num && k < source->size; j++, k++)
+            temp[j] = source->str[k];
+        
+        destination->str = temp;
+        destination->size = num;
+        destination->hashcode = String_CreateHash(destination->str);
+        
+        return destination;
+    }
     
-    
-    temp = String_Cat(destination, source);
-    
-    temp = String_nCpy(temp, destination, num);
-    
-    
-    free(destination->str);
-    destination->str = temp->str;
-    free(temp->str);
-    free(temp);
-    destination->size = num;
-    destination->hashcode = String_CreateHash(destination->str);
-    
-    
-//    if(!source || !destination || !source->str || !destination->str || source->size <= num)
-//        return NULL;
-//    
-//    char * temp = (char * ) realloc(destination->str, sizeof(char) * (destination->size + num + 1));
-//    
-//    if(!temp)
-//        return NULL;
-//    
-//    for(int i = 0; i < destination->size; i++)
-//        temp[i] = destination->str[i];
-//    
-//    size_t i,j;
-//    
-//    for(i = destination->size, j = 0; j < num; i++, j++)
-//        temp[i] = source->str[j];
-//    
-//    destination->str = temp;
-//    destination->size += num;
-//    destination->hashcode = String_CreateHash(destination->str);
-    
-    return destination;
+    return NULL;
     
 }
 
 int String_Cmp ( const String * str1, const String * str2 )
 {
-    return 0;
+    if(!str1 || !str1->str || !str2 || !str2->str)
+        return -3;
+    
+    size_t size;
+    
+    if(str1->size >= str2->size)
+        size = str2->size;
+    else
+        size = str1->size;
+    
+    for(int i = 0; i < size ; i++)
+    {
+        if(str1->str[i] > str2->str[i])
+            return 1;
+        else if(str1->str[i] < str2->str[i])
+            return -1;
+    }
+            
+    if(str1->size > str2->size)
+        return 1;
+    else if(str1->size < str2->size)
+        return -1;
+    else
+        return 0;
+    
 }
 
 int String_nCmp ( const String * str1, const String * str2, size_t num )
 {
+    if(!str1 || !str1->str || !str2 || !str2->str || num > str1->size || num > str2->size)
+        return -3;
+    
+    for(int i = 0; i < num ; i++)
+    {
+        if(str1->str[i] > str2->str[i])
+            return 1;
+        else if(str1->str[i] < str2->str[i])
+            return -1;
+    }
+    
     return 0;
+
 }
 
 String * String_Chr (String * str, int character )
 {
+    if(str && str->str)
+    {
+        char c = character;
+        
+        while(*str->str != c && *str->str != '\0')
+            str->str++;
+        return (*str->str == c) ? str : NULL;
+    }
+    
     return NULL;
 }
 
 size_t String_cSpn ( const String * str1, const String * str2 )
 {
+    if(str1 && str1->str && str2 && str2->str)
+    {
+        char * c;
+        
+        for(c = str1->str; *c != '\0'; c++)
+        {
+            for(int i = 0; i < str2->size ;i++)
+                if(*c == str2->str[i])
+                    return str2->size - i;
+        }
+    }
+    
     return 0;
 }
 
 String * String_pBrk (const String * str1, const String * str2 )
 {
+    
+    
+    
+    
     return NULL;
 }
 
 String * String_rChr (const String * str, int character )
 {
+    
+    
+    
+    
     return NULL;
 }
 
 size_t String_spn ( const String * str1, const String * str2 )
 {
+    
+    
+    
+    
     return 0;
 }
 
 String * String_Str (String * str1, const String * str2 )
 {
+    
+    
+    
+    
     return NULL;
 }
 
@@ -335,17 +400,29 @@ size_t String_CreateHash(const char * str)
 
 String * String_Trim(String * str)
 {
+    
+    
+    
+    
+    
     return NULL;
     
 }
 
 String * String_LTrim(String * str)
 {
+    
+    
+    
+    
     return NULL;
 }
 
 String * String_RTrim(String * str)
 {
+    
+    
+    
     return NULL;
 }
 
@@ -395,7 +472,6 @@ String * String_Lower(String * str)
     
     return newStr;
     
-        
 }
 
 String * String_Upper(String * str)
@@ -455,17 +531,28 @@ String * String_Reverse(String * str)
 
 size_t String_WordCount(const String * str)
 {
+    
+    
+    
+    
+    
     return 0;
 }
 
 
 String * String_StartsWith (const String * str, const String * startsWith)
 {
+    
+    
+    
     return NULL;
 }//return new string
 
 String * String_TrimChar(String * str, const char * c)
 {
+    
+    
+    
     return NULL;
 }
 

@@ -139,8 +139,8 @@ int main(int argc, char **argv)
     String *jx;
     ix = (String *)malloc(sizeof(String));
     jx = (String *) malloc(sizeof(String));
-    ix = malloc(sizeof(String));
-    jx = malloc(sizeof(String));
+//    ix = malloc(sizeof(String));
+//    jx = malloc(sizeof(String));
     String_New(ix, "Darth Vader");
     String_New(jx, "Darth Vader");
     printf("String_Cmp: \n%s\n%s\n%d\n\n", ix->str, jx->str, String_Cmp(ix, jx));
