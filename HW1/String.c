@@ -20,15 +20,26 @@ int String_New(String * strObj,char * str)
     
     size_t len = String_ChrLen(str);
     strObj->size = len;
-    strObj->str = (char *) malloc(sizeof(char) * len + 1);
     
-    if(!strObj->str)
+    char * temp = NULL;
+    
+    if(strObj->str != NULL)
+    {
+        temp = (char *) realloc(strObj->str, sizeof(char) * (len + 1));
+    }
+    else
+    {
+        strObj->str = (char *) malloc(sizeof(char) * (len + 1));
+        temp = strObj->str;
+    }
+    
+    if(!strObj->str || !temp)
         return 0;
     
     int i;
     
     for(i = 0; i < len; i++)
-        strObj->str[i] = str[i];
+        temp[i] = str[i];
     
     strObj->str[++i] = '\0';
     strObj->hashcode = String_CreateHash(strObj->str);
@@ -302,11 +313,11 @@ String * String_Chr (String * str, int character )
             return NULL;
         
         char c = character;
-        char * ini = temp->str;
+        //char * ini = temp->str;
         
         while(*temp->str != c && *temp->str != '\0')
             temp->str++;
-        temp->size = (temp->str - ini) - 1;
+        temp->size = String_Len(temp);
         temp->hashcode = String_CreateHash(temp->str);
         
         return (*temp->str == c) ? temp : NULL;
@@ -343,7 +354,7 @@ String * String_pBrk (const String * str1, const String * str2 )
         
         for(; *temp->str != '\0'; temp->str++)
         {
-            if(String_Chr(str2, *temp->str))
+            if(String_Chr((String *) str2, *temp->str))
                 return temp;
         }
     }
@@ -353,9 +364,26 @@ String * String_pBrk (const String * str1, const String * str2 )
 
 String * String_rChr (const String * str, int character )
 {
+    char c = character;
+    String * temp = NULL;
+    char * last = NULL;
     
+    if(!str || !str->str || (c == '\0'))
+        return NULL;
     
+    temp = (String *) str;
+    char * ptrC = NULL;
     
+    for(ptrC = temp->str; ptrC != '\0'  ; ptrC++)
+    {
+        if(*ptrC == c)
+        {
+            last = ptrC;
+        }
+    }
+    
+    if(String_New(temp, last))
+        return temp;
     
     return NULL;
 }
