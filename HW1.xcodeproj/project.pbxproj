@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B0E171A81F0314EB006957B3 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E171A71F0314EB006957B3 /* main.c */; };
+		B0E171B21F03269A006957B3 /* String.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E171B11F03269A006957B3 /* String.c */; };
+		B0E171B41F0326B7006957B3 /* ArrayList.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E171B31F0326B7006957B3 /* ArrayList.c */; };
+		B0E171B61F0326D5006957B3 /* globalconst.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E171B51F0326D5006957B3 /* globalconst.c */; };
+		B0E171B81F032715006957B3 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E171B71F032715006957B3 /* main.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +27,13 @@
 
 /* Begin PBXFileReference section */
 		B0E171A41F0314EB006957B3 /* HW1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HW1; sourceTree = BUILT_PRODUCTS_DIR; };
-		B0E171A71F0314EB006957B3 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		B0E171AE1F03153F006957B3 /* ArrayList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayList.h; sourceTree = "<group>"; };
+		B0E171AF1F03153F006957B3 /* globalconst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globalconst.h; sourceTree = "<group>"; };
+		B0E171B01F03153F006957B3 /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
+		B0E171B11F03269A006957B3 /* String.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = String.c; sourceTree = "<group>"; };
+		B0E171B31F0326B7006957B3 /* ArrayList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ArrayList.c; sourceTree = "<group>"; };
+		B0E171B51F0326D5006957B3 /* globalconst.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = globalconst.c; sourceTree = "<group>"; };
+		B0E171B71F032715006957B3 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +66,13 @@
 		B0E171A61F0314EB006957B3 /* HW1 */ = {
 			isa = PBXGroup;
 			children = (
-				B0E171A71F0314EB006957B3 /* main.c */,
+				B0E171B71F032715006957B3 /* main.c */,
+				B0E171B11F03269A006957B3 /* String.c */,
+				B0E171B31F0326B7006957B3 /* ArrayList.c */,
+				B0E171B51F0326D5006957B3 /* globalconst.c */,
+				B0E171AE1F03153F006957B3 /* ArrayList.h */,
+				B0E171AF1F03153F006957B3 /* globalconst.h */,
+				B0E171B01F03153F006957B3 /* String.h */,
 			);
 			path = HW1;
 			sourceTree = "<group>";
@@ -120,7 +135,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0E171A81F0314EB006957B3 /* main.c in Sources */,
+				B0E171B81F032715006957B3 /* main.c in Sources */,
+				B0E171B41F0326B7006957B3 /* ArrayList.c in Sources */,
+				B0E171B21F03269A006957B3 /* String.c in Sources */,
+				B0E171B61F0326D5006957B3 /* globalconst.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,7 +172,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -202,7 +220,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
