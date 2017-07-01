@@ -161,7 +161,6 @@ String * String_Cpy ( String * destination, const String * source )
         for(i = 0; i < source->size; i++)
             temp[i] = source->str[i];
         
-        destination->str = temp;
         destination->size = source->size;
         destination->hashcode = String_CreateHash(destination->str);
         
@@ -187,7 +186,7 @@ String * String_nCpy ( String * destination, const String * source, size_t num )
     int i;
     for(i = 0; i < num; i++)
         temp[i] = source->str[i];
-    destination->str = temp;
+    
     destination->size = num;
     destination->hashcode = String_CreateHash(destination->str);
     
@@ -210,13 +209,10 @@ String * String_Cat ( String * destination, const String * source )
     
     size_t i,j;
     size_t scSize = source->size;
-    for(i = 0; i < initial; i++)
-        temp[i] = destination->str[i];
     
     for(i = initial, j = 0; j < scSize; i++, j++)
         temp[i] = source->str[j];
     
-    destination->str = temp;
     destination->size += scSize;
     destination->hashcode = String_CreateHash(destination->str);
     
@@ -233,15 +229,11 @@ String * String_nCat ( String * destination, const String * source, size_t num )
     
     if(temp)
     {
-        size_t i, j, k;
+        size_t j, k;
         
-        for(i = 0; i < destination->size && i < num; i++)
-            temp[i] = destination->str[i];
-        
-        for(j = i, k = 0; j < num && k < source->size; j++, k++)
+        for(j = destination->size, k = 0; j < num && k < source->size; j++, k++)
             temp[j] = source->str[k];
         
-        destination->str = temp;
         destination->size = num;
         destination->hashcode = String_CreateHash(destination->str);
         
@@ -297,7 +289,7 @@ int String_nCmp ( const String * str1, const String * str2, size_t num )
     return 0;
 
 }
-
+//Ask about the changing the source
 String * String_Chr (String * str, int character )
 {
     if(str && str->str)
