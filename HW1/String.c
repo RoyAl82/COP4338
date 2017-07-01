@@ -219,18 +219,20 @@ String * String_nCat ( String * destination, const String * source, size_t num )
 {
     String * temp = (String *) malloc(sizeof(String));
     
-    temp->str = (char *) malloc(sizeof(char) * num);
+    temp->str = (char *) malloc(sizeof(char));
     
     
     
     temp = String_Cat(destination, source);
+    
     temp = String_nCpy(temp, destination, num);
     
-    destination->size = num;
+    
     free(destination->str);
     destination->str = temp->str;
     free(temp->str);
     free(temp);
+    destination->size = num;
     destination->hashcode = String_CreateHash(destination->str);
     
     
