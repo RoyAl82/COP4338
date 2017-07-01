@@ -217,24 +217,42 @@ String * String_Cat ( String * destination, const String * source )
 
 String * String_nCat ( String * destination, const String * source, size_t num )
 {
-    if(!source || !destination || !source->str || !destination->str || source->size <= num)
-        return NULL;
+    String * temp = (String *) malloc(sizeof(String));
     
-    char * c = (char * ) realloc(destination->str, sizeof(char) * (destination->size + num + 1));
+    temp->str = (char *) malloc(sizeof(char) * num);
     
-    if(!c)
-        return NULL;
     
-    for(int i = 0; i < destination->size; i++)
-        c[i] = destination->str[i];
     
-    size_t i,j;
-    for(i = destination->size, j = 0; j < num; i++, j++)
-        c[i] = source->str[j];
+    temp = String_Cat(destination, source);
+    temp = String_nCpy(temp, destination, num);
     
-    destination->str = c;
-    destination->size += num;
+    destination->size = num;
+    free(destination->str);
+    destination->str = temp->str;
+    free(temp->str);
+    free(temp);
     destination->hashcode = String_CreateHash(destination->str);
+    
+    
+//    if(!source || !destination || !source->str || !destination->str || source->size <= num)
+//        return NULL;
+//    
+//    char * temp = (char * ) realloc(destination->str, sizeof(char) * (destination->size + num + 1));
+//    
+//    if(!temp)
+//        return NULL;
+//    
+//    for(int i = 0; i < destination->size; i++)
+//        temp[i] = destination->str[i];
+//    
+//    size_t i,j;
+//    
+//    for(i = destination->size, j = 0; j < num; i++, j++)
+//        temp[i] = source->str[j];
+//    
+//    destination->str = temp;
+//    destination->size += num;
+//    destination->hashcode = String_CreateHash(destination->str);
     
     return destination;
     
