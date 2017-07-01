@@ -11,6 +11,8 @@
 #include "String.h"
 
 
+
+
 int String_New(String * strObj,char * str)
 {
     if(str == NULL || strObj == NULL)
@@ -292,13 +294,22 @@ int String_nCmp ( const String * str1, const String * str2, size_t num )
 //Ask about the changing the source
 String * String_Chr (String * str, int character )
 {
-    if(str && str->str)
+    String * temp = (String *) malloc(sizeof(String));
+    
+    if(str && str->str && temp)
     {
-        char c = character;
+        if(!String_New(temp, str->str))
+            return NULL;
         
-        while(*str->str != c && *str->str != '\0')
-            str->str++;
-        return (*str->str == c) ? str : NULL;
+        char c = character;
+        char * ini = temp->str;
+        
+        while(*temp->str != c && *temp->str != '\0')
+            temp->str++;
+        temp->size = (temp->str - ini) - 1;
+        temp->hashcode = String_CreateHash(temp->str);
+        
+        return (*temp->str == c) ? temp : NULL;
     }
     
     return NULL;
@@ -323,10 +334,20 @@ size_t String_cSpn ( const String * str1, const String * str2 )
 
 String * String_pBrk (const String * str1, const String * str2 )
 {
+    String * temp = (String * ) malloc(sizeof(String));
     
-    
-    
-    
+    if(str1 && str1->str && str2 && str2->str)
+    {
+        if(!String_New(temp, str1->str))
+            return NULL;
+        
+        for(; *temp->str != '\0'; temp->str++)
+        {
+            if(String_Chr(str2, *temp->str))
+                return temp;
+        }
+    }
+        
     return NULL;
 }
 
