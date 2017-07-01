@@ -217,9 +217,26 @@ String * String_Cat ( String * destination, const String * source )
 
 String * String_nCat ( String * destination, const String * source, size_t num )
 {
-    if(!source || !destination || !source->str || !destination->str)
+    if(!source || !destination || !source->str || !destination->str || source->size <= num)
         return NULL;
     
+    char * c = (char * ) realloc(destination->str, sizeof(char) * (destination->size + num + 1));
+    
+    if(!c)
+        return NULL;
+    
+    for(int i = 0; i < destination->size; i++)
+        c[i] = destination->str[i];
+    
+    size_t i,j;
+    for(i = destination->size, j = 0; j < num; i++, j++)
+        c[i] = source->str[j];
+    
+    destination->str = c;
+    destination->size += num;
+    destination->hashcode = String_CreateHash(destination->str);
+    
+    return destination;
     
 }
 
