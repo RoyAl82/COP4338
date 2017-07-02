@@ -412,7 +412,7 @@ String * String_Str (String * str1, const String * str2 )
             c2 = temp->str;
         }
     }
-   //This is a test
+   
     if(String_nCmp(((c2 && temp && String_New(temp, c2)) ? temp : NULL), str2, str2->size))
     {
         return temp;
