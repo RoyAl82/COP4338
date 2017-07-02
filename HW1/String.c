@@ -25,11 +25,11 @@ int String_New(String * strObj,char * str)
     
     if(strObj->str != NULL)
     {
-        temp = (char *) realloc(strObj->str, sizeof(char) * (len + 1));
+        temp = (char *) realloc(strObj->str, sizeof(char) * len + 1);
     }
     else
     {
-        strObj->str = (char *) malloc(sizeof(char) * (len + 1));
+        strObj->str = (char *) malloc(sizeof(char) * len + 1);
         temp = strObj->str;
     }
     
@@ -41,7 +41,7 @@ int String_New(String * strObj,char * str)
     for(i = 0; i < len; i++)
         temp[i] = str[i];
     
-    strObj->str[++i] = '\0';
+    strObj->str[i] = '\0';
     strObj->hashcode = String_CreateHash(strObj->str);
     
     
@@ -160,26 +160,11 @@ void String_SetChar(const String *strObj,const size_t index, const char c)
 ///Haven't finished
 String * String_Cpy ( String * destination, const String * source )
 {
-    if(!destination || !source)
+    if(!destination || !source || !source->str)
         return NULL;
     
-    char * temp = (char *) realloc(destination->str, sizeof(char) * (source->size + 1));
-    
-    if(!temp)
-        return NULL;
-   
-    if(temp)
-    {
-        int i;
-        for(i = 0; i < source->size; i++)
-            temp[i] = source->str[i];
-        
-        destination->size = source->size;
-        destination->hashcode = String_CreateHash(destination->str);
-        
+    if(String_New(destination, source->str))
         return destination;
-        
-    }
     
     return NULL;
         
@@ -365,16 +350,17 @@ String * String_pBrk (const String * str1, const String * str2 )
 String * String_rChr (const String * str, int character )
 {
     char c = character;
-    String * temp = NULL;
-    char * last = NULL;
+    String * temp = (String *) malloc(sizeof(String));
     
-    if(!str || !str->str || (c == '\0'))
+    
+    if(!str || !str->str || !String_New(temp, str->str) ||(c == '\0'))
         return NULL;
     
-    temp = (String *) str;
+    
+    char * last = NULL;
     char * ptrC = NULL;
     
-    for(ptrC = temp->str; ptrC != '\0'  ; ptrC++)
+    for(ptrC = temp->str; *ptrC != '\0'  ; ptrC++)
     {
         if(*ptrC == c)
         {
@@ -390,25 +376,51 @@ String * String_rChr (const String * str, int character )
 
 size_t String_spn ( const String * str1, const String * str2 )
 {
+    if(!str1 || !str1->str || !str2 || !str2->str)
+        return 0;
     
+    char *sc1;
     
+    for (sc1 = str1->str; *sc1 != '\0'; sc1++)
+        if (String_Chr((String *)str2, *sc1) == NULL)
+            return (sc1 - str1->str);
     
-    
-    return 0;
+    return sc1 - str1->str;
 }
 
 String * String_Str (String * str1, const String * str2 )
 {
+    String * temp = (String *) malloc(sizeof(String));
     
+    if(!str1 || !str1->str || !str2 || !str2->str || !String_New(temp, str1->str))
+        return NULL;
     
+    char * c = NULL;
+    char * c1 = NULL;
+    char * c2 = NULL;
+    for(c = temp->str, c1 = str2->str ; *c != '\0'; c++)
+    {
+        if((temp = String_Chr(temp, *c1)))
+        {
+            c2 = temp->str++;
+            c1++;
+        }
+        else if(c2)
+        {
+            String_New(temp, c2);
+            return temp;
+        }
+    }
     
+    free(temp);
+    temp = NULL;
     
-    return NULL;
+    return str1;
 }
 
 size_t String_Len ( const String * str )
 {
-    if(!str)
+    if(!str || !str->str)
         return 0;
     
     size_t len;

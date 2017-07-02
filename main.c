@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     String * bnew =String_Cpy(b, a);
     printf("%s\n", bnew->str);
     printf("Old Hash: %zu\nNew Hash: %zu\n\n", hash0, String_GetHashCode(b));
-    printf("hash a: %zu\nhash b: %zu\n",String_GetHashCode(a), String_GetHashCode(b));
+    printf("hash a: %zu\nhash b: %zu\nhash bnew: %zu\n",String_GetHashCode(a), String_GetHashCode(b), String_GetHashCode(bnew));
     if (String_Equal(a,bnew))
         printf("====>String_Copy a,b are equal\n");
     else
@@ -172,8 +172,9 @@ int main(int argc, char **argv)
     //String_rChr                                                                                                           Done
     String_New(r, "do or do not, there is no try");
     size_t r11 = String_GetHashCode(r);
-    printf("String_rChr: \n%s\n%s\n", r->str, String_rChr(r, 't')->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", r11, String_GetHashCode(r));
+    String * r12 = String_rChr(r, 't');
+    printf("String_rChr: \n%s\n%s\n", r->str, r12->str);
+    printf("Old Hash: %zu\nNew Hash: %zu\n\n", r11, String_GetHashCode(r12));
     
     //String_Spn
     String_New(s, "129th");
@@ -186,7 +187,7 @@ int main(int argc, char **argv)
     String_New(u, "No, I am your mother");
     String_New(v, "your");
     size_t u1 = u->hashcode;
-    printf("String_Str: \n%s", u->str);
+    printf("String_Str:\n%s\n", u->str);
     
     u = String_Str(u, v);
     

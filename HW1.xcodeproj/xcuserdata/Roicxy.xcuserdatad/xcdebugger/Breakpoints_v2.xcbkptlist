@@ -22,32 +22,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HW1/String.c"
-            timestampString = "520645386.356153"
+            timestampString = "520649521.38488"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "381"
-            endingLineNumber = "381"
-            landmarkName = "String_rChr()"
+            startingLineNumber = "403"
+            endingLineNumber = "403"
+            landmarkName = "String_Str()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HW1/String.c"
-            timestampString = "520645426.19368"
+            timestampString = "520649920.946551"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "377"
-            endingLineNumber = "377"
-            landmarkName = "String_rChr()"
+            startingLineNumber = "410"
+            endingLineNumber = "410"
+            landmarkName = "String_Str()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
