@@ -23,14 +23,15 @@ int String_New(String * strObj,char * str)
     
     char * temp = NULL;
     
-    if(strObj->str != NULL)
-    {
-        temp = (char *) realloc(strObj->str, sizeof(char) * len + 1);
-    }
-    else
+    if(!strObj->str || *strObj->str == ' ')
     {
         strObj->str = (char *) malloc(sizeof(char) * len + 1);
         temp = strObj->str;
+        
+    }
+    else
+    {
+        temp = (char *) realloc(strObj->str, sizeof(char) * len + 1);
     }
     
     if(!strObj->str || !temp)
@@ -298,14 +299,14 @@ String * String_Chr (String * str, int character )
             return NULL;
         
         char c = character;
-        //char * ini = temp->str;
+        
         
         while(*temp->str != c && *temp->str != '\0')
             temp->str++;
         temp->size = String_Len(temp);
         temp->hashcode = String_CreateHash(temp->str);
         
-        return (*temp->str == c) ? temp : NULL;
+        return (*temp->str == c) ? temp : (temp->str = '\0', temp);
     }
     
     return NULL;
@@ -342,6 +343,8 @@ String * String_pBrk (const String * str1, const String * str2 )
             if(String_Chr((String *) str2, *temp->str))
                 return temp;
         }
+        
+        
     }
         
     return NULL;
@@ -395,23 +398,26 @@ String * String_Str (String * str1, const String * str2 )
     if(!str1 || !str1->str || !str2 || !str2->str || !String_New(temp, str1->str))
         return NULL;
     
-    char * c = NULL;
-    char * c1 = NULL;
+    char * c1 = &str2->str[0];
+    
     char * c2 = NULL;
-    for(c = temp->str, c1 = str2->str ; *c != '\0'; c++)
+    
+    for(; *temp->str != '\0' && (c1 - str2->str) < str2->size; temp->str++, c1++)
     {
-        if((temp = String_Chr(temp, *c1)))
+        temp = String_Chr(temp, *c1);
+        
+        if((*c1 == *str2->str) || (*(str1->str + ((temp->str - str1->str) - 1))
+                     != *(str2->str + (c1 - str2->str) - 1)))
         {
-            c2 = temp->str++;
-            c1++;
-        }
-        else if(c2)
-        {
-            String_New(temp, c2);
-            return temp;
+            c2 = temp->str;
         }
     }
-    
+   
+    if(String_nCmp(((c2 && temp && String_New(temp, c2)) ? temp : NULL), str2, str2->size))
+    {
+        return temp;
+    }
+
     free(temp);
     temp = NULL;
     
