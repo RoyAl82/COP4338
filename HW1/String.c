@@ -21,20 +21,9 @@ int String_New(String * strObj,char * str)
     size_t len = String_ChrLen(str);
     strObj->size = len;
     
-    char * temp = NULL;
+    char * temp = (char *) malloc(sizeof(char) * len + 1);
     
-    if(!strObj->str || *strObj->str == ' ')
-    {
-        strObj->str = (char *) malloc(sizeof(char) * len + 1);
-        temp = strObj->str;
-        
-    }
-    else
-    {
-        temp = (char *) realloc(strObj->str, sizeof(char) * len + 1);
-    }
-    
-    if(!strObj->str || !temp)
+    if(!temp)
         return 0;
     
     int i;
@@ -42,6 +31,10 @@ int String_New(String * strObj,char * str)
     for(i = 0; i < len; i++)
         temp[i] = str[i];
     
+    if(strObj->str)
+        free(strObj->str);
+    
+    strObj->str = temp;
     strObj->str[i] = '\0';
     strObj->hashcode = String_CreateHash(strObj->str);
     
@@ -343,8 +336,6 @@ String * String_pBrk (const String * str1, const String * str2 )
             if(String_Chr((String *) str2, *temp->str))
                 return temp;
         }
-        
-        
     }
         
     return NULL;
@@ -400,26 +391,21 @@ String * String_Str (String * str1, const String * str2 )
     
     char * c1 = &str2->str[0];
     
-    char * c2 = NULL;
-    
-    for(; *temp->str != '\0' && (c1 - str2->str) < str2->size; temp->str++, c1++)
+    for( ; !temp && *temp->str != '\0'; temp->str++)
     {
         temp = String_Chr(temp, *c1);
         
-        if((*c1 == *str2->str) || (*(str1->str + ((temp->str - str1->str) - 1))
-                     != *(str2->str + (c1 - str2->str) - 1)))
+        if(String_nCmp(((c1 && temp && String_New(temp, c1)) ? temp : NULL), str2, str2->size))
         {
-            c2 = temp->str;
+            return temp;
         }
     }
-   
-    if(String_nCmp(((c2 && temp && String_New(temp, c2)) ? temp : NULL), str2, str2->size))
+    
+    if (!temp)
     {
-        return temp;
+        free(temp);
+        temp = NULL;
     }
-
-    free(temp);
-    temp = NULL;
     
     return str1;
 }
@@ -459,12 +445,22 @@ size_t String_CreateHash(const char * str)
 
 String * String_Trim(String * str)
 {
+    if(!str || !str->str)
+        return NULL;
     
+//    char * c = (char*) malloc(sizeof(char) * str->size + 1);
+//    int j = 0;
+//    
+//    for(int i = 0; i < str->size; i++)
+//        if(str->str[i] != ' ')
+//            c[j++] = str->str[i];
+//    
+//    c[j] = '\0';
+//    
+//    free(str->str);
+//    str->str = c;
     
-    
-    
-    
-    return NULL;
+    return str;
     
 }
 
@@ -591,11 +587,20 @@ String * String_Reverse(String * str)
 size_t String_WordCount(const String * str)
 {
     
+    if(!str || !str->str)
+        return 0;
     
+    int i;
+    int numC = 0;
+    char * c = str->str;
+    for(i = 0; i < str->size; i++)
+    {
+        if(*c != ' ' || *c != '\n')
+            numC++;
+            
+    }
     
-    
-    
-    return 0;
+    return (str->size - numC) + 1;
 }
 
 
