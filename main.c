@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     else
         printf("====>String_Cat does NOT work\n");
     
-    free(efnew);
+    //free(efnew);
     
     
     //String_nCat                                                                                                           Done
@@ -239,7 +239,7 @@ int main(int argc, char **argv)
     
     //String_IndexOfChar                                                                                                    Done
     String_New(ee, "abcde");
-    printf("String_IndexOfChar d should be 3: \n%s\n%zu\n\n", ee->str, String_IndexOfChar(ee, 'd'));
+    printf("String_IndexOfChar d should be 3: \n%s\n%d\n\n", ee->str, String_IndexOfChar(ee, 'd'));
     
     //String_Lower                                                                                                          Done
     String_New(ff, "ABCDE");
