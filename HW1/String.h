@@ -53,7 +53,7 @@ String * String_Trim(String * str);
 String * String_LTrim(String * str);
 String * String_RTrim(String * str);
 size_t String_GetCharFromIndex(const String * str, int index);
-size_t String_IndexOfChar(const String * str, char c);
+int String_IndexOfChar(const String * str, char c);
 String * String_Lower(String * str);
 String * String_Upper(String * str);
 String * String_Reverse(String * str);

@@ -31,11 +31,8 @@ int String_New(String * strObj,char * str)
     for(i = 0; i < len; i++)
         temp[i] = str[i];
     
-    if(strObj->str)
-        free(strObj->str);
-    
     strObj->str = temp;
-    strObj->str[i] = '\0';
+    strObj->str[len] = '\0';
     strObj->hashcode = String_CreateHash(strObj->str);
     
     
@@ -296,6 +293,10 @@ String * String_Chr (String * str, int character )
         
         while(*temp->str != c && *temp->str != '\0')
             temp->str++;
+        
+        if(*temp->str != c)
+            return NULL;
+        
         temp->size = String_Len(temp);
         temp->hashcode = String_CreateHash(temp->str);
         
@@ -324,20 +325,19 @@ size_t String_cSpn ( const String * str1, const String * str2 )
 
 String * String_pBrk (const String * str1, const String * str2 )
 {
-    String * temp = (String * ) malloc(sizeof(String));
+    String * temp = NULL;
     
     if(str1 && str1->str && str2 && str2->str)
     {
-        if(!String_New(temp, str1->str))
-            return NULL;
-        
-        for(; *temp->str != '\0'; temp->str++)
+        char * tempS1 = str1->str;
+       
+        for(; *tempS1 != '\0'; tempS1++)
         {
-            if(String_Chr((String *) str2, *temp->str))
+            if((temp = String_Chr((String *) str2, *tempS1)) && String_New(temp, tempS1))
                 return temp;
+            
         }
     }
-        
     return NULL;
 }
 
@@ -389,15 +389,18 @@ String * String_Str (String * str1, const String * str2 )
     if(!str1 || !str1->str || !str2 || !str2->str || !String_New(temp, str1->str))
         return NULL;
     
-    char * c1 = &str2->str[0];
-    
-    for( ; !temp && *temp->str != '\0'; temp->str++)
+    char * c1 = str2->str;
+
+    for( ;temp && *temp->str != '\0'; temp->str++)
     {
-        temp = String_Chr(temp, *c1);
+        temp = String_Chr(str1, *c1);
         
-        if(String_nCmp(((c1 && temp && String_New(temp, c1)) ? temp : NULL), str2, str2->size))
+        if(!String_nCmp(temp, str2, str2->size) && String_New(str1, temp->str))
         {
-            return temp;
+            free(temp);
+            temp = NULL;
+            
+            return str1;
         }
     }
     
@@ -447,38 +450,57 @@ String * String_Trim(String * str)
 {
     if(!str || !str->str)
         return NULL;
-    
-//    char * c = (char*) malloc(sizeof(char) * str->size + 1);
-//    int j = 0;
-//    
-//    for(int i = 0; i < str->size; i++)
-//        if(str->str[i] != ' ')
-//            c[j++] = str->str[i];
-//    
-//    c[j] = '\0';
-//    
-//    free(str->str);
-//    str->str = c;
-    
-    return str;
-    
+   
+    if(String_LTrim(str) && String_RTrim(str))
+        return str;
+    return NULL;
 }
 
 String * String_LTrim(String * str)
 {
+    if(!str || !str->str)
+        return NULL;
+    
+    char *c = str->str;
+    
+    while(*c == ' ')
+        if(*c == ' ')
+            c++;
+    
+    int i = 0;
+    while(*c != '\0' && (str->str[i] = *(c++)))
+        i++;
     
     
+    str->str[i] = '\0';
     
+    String_New(str, str->str);
     
-    return NULL;
+    return str;
 }
 
 String * String_RTrim(String * str)
 {
+    if(!str || !str->str)
+        return NULL;
+    
+    char *c1 = str->str + str->size -1;
+    char *c = str->str;
+    
+    while(*c1 == ' ')
+        if(*c1 == ' ')
+            c1--;
+    
+    int i = 0;
+    while(c <= c1 && (str->str[i] = *(c++)))
+        i++;
     
     
+    str->str[i] = '\0';
     
-    return NULL;
+    String_New(str, str->str);
+    
+    return str;
 }
 
 size_t String_GetCharFromIndex(const String * str, int index)
@@ -488,14 +510,14 @@ size_t String_GetCharFromIndex(const String * str, int index)
     return str->str[index];
 }
 
-size_t String_IndexOfChar(const String * str, char c)
+int String_IndexOfChar(const String * str, char c)
 {
     if(!str || !str->str || !c)
         return 0;
     int index = 0;
     while( index < str->size && str->str[index++] != c);
     
-    return index;
+    return index - 1;
         
 }
 
@@ -505,28 +527,15 @@ String * String_Lower(String * str)
     if(!str || !str->str)
         return 0;
     
-    String * newStr = (String* ) malloc(sizeof(String));
-    if(newStr)
-        newStr->str = (char*) malloc(sizeof(char) * str->size);
-    
-    if(!newStr || !newStr->str)
-        return 0;
-    
-    newStr->size = str->size;
-    
-    
     for(int i = 0; i < str->size; i++)
     {
         char c = str->str[i];
-        if(c > 'A' && c < 'Z')
-            newStr->str[i] = c + ('a' - 'A');
-        
-        newStr->str[i] = c;
+        if(c >= 'A' && c <= 'Z')
+            str->str[i] = c + ('a' - 'A');
     }
-    newStr->hashcode = String_CreateHash(newStr->str);
+    str->hashcode = String_CreateHash(str->str);
     
-    return newStr;
-    
+    return str;
 }
 
 String * String_Upper(String * str)
@@ -534,28 +543,16 @@ String * String_Upper(String * str)
     if(!str || !str->str)
         return 0;
     
-    String * newStr = (String* ) malloc(sizeof(String));
-    if(newStr)
-        newStr->str = (char*) malloc(sizeof(char) * str->size);
-    
-    if(!newStr || !newStr->str)
-        return 0;
-    
-    newStr->size = str->size;
-    
-    
     for(int i = 0; i < str->size; i++)
     {
         char c = str->str[i];
-        if(c > 'a' && c < 'z')
-            newStr->str[i] = c - ('a' - 'A');
-        
-        newStr->str[i] = c;
+        if(c >= 'a' && c <= 'z')
+            str->str[i] = c - ('a' - 'A');
     }
     
-    newStr->hashcode = String_CreateHash(newStr->str);
+    str->hashcode = String_CreateHash(str->str);
     
-    return newStr;
+    return str;
 }
 
 String * String_Reverse(String * str)
@@ -563,25 +560,22 @@ String * String_Reverse(String * str)
     if(!str || !str->str || !str->size)
         return NULL;
     
-    String * newStr = (String *) malloc(sizeof(String));
+    char * c = (char *) malloc(sizeof(char) * (str->size + 1));
     
-    if(!newStr)
-        return NULL;
-    
-    newStr->str = (char *) malloc(sizeof(char) * (str->size + 1));
-    
-    if(!newStr->str)
-        return NULL;
-    
-    size_t initial = 0;
-    size_t last = str->size;
-    
-    while((newStr->str[initial++] = str->str[last--]) != '\0');
-    
-    newStr->hashcode = String_CreateHash(newStr->str);
-    
-    return newStr;
-    
+    if(c)
+    {
+        size_t last = str->size;
+        
+        for(int i = 0; i < last; i++)
+            c[i] = str->str[last - i - 1];
+        
+        if(!String_New(str, c))
+            return NULL;
+        
+        return str;
+        
+    }
+    return NULL;
 }
 
 size_t String_WordCount(const String * str)
@@ -595,7 +589,7 @@ size_t String_WordCount(const String * str)
     char * c = str->str;
     for(i = 0; i < str->size; i++)
     {
-        if(*c != ' ' || *c != '\n')
+        if(*(c++) != ' ')
             numC++;
             
     }
@@ -606,16 +600,40 @@ size_t String_WordCount(const String * str)
 
 String * String_StartsWith (const String * str, const String * startsWith)
 {
+    if(!str || !str->str || !startsWith || !startsWith->str)
+        return NULL;
+    
+    int i = 0;
+    
+    while(i < startsWith->size)
+        if(startsWith->str[i] != str->str[i++])
+            return NULL;
     
     
-    
-    return NULL;
+    return (String *)str;
 }//return new string
 
 String * String_TrimChar(String * str, const char * c)
 {
+    char * newC = (char *) calloc(str->size, sizeof(char));
+    
+    if(!str || !str->str || !c || !newC)
+        return NULL;
     
     
+    char * oldStr = str->str;
+    
+    for(int i = 0; i < str->size; oldStr++)
+    {
+        if(*oldStr != *c)
+            newC[i] = *oldStr;
+    }
+    
+    if(String_New(str, newC))
+    {
+        free(newC);
+        return str;
+    }
     
     return NULL;
 }

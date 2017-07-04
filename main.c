@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     else
         printf("====>HashCode a,b NOT equal\n");
     
-    free(bnew);
+    //free(bnew);
     
     //String_nCopy                                                                                                          Done
     String_New(c, "Chewbacca");
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     else
         printf("====>String_Copy does NOT work\n");
     
-    free(dnew);
+    //free(dnew);
     //String_Cat                                                                                                            Done
     String_New(e, "R2-");
     String_New(f, "D2");
