@@ -9,40 +9,36 @@
 #include <stdio.h>
 #include "ArrayList.h"
 
+//****************************************************************
 boolean ArrayList_New(ArrayList * list)
 {
     if(list)
     {
-        ArrayListPtr * t = (ArrayListPtr *) malloc(sizeof(ArrayList));
-        list->arr = malloc(sizeof(void));
-//        list->arr[list->size] = malloc(sizeof(void) * INITIAL_SIZE_STRING_LIST);
+        list->arr = calloc(INITIAL_SIZE_STRING_LIST, sizeof(void*) * INITIAL_SIZE_STRING_LIST);
         
-        if(t)
+        if(list->arr)
         {
-            *t = (ArrayList*)malloc(sizeof(ArrayList));
-            
-            *t = list;
             list->reserved = INITIAL_SIZE_STRING_LIST;
-            
+            list->size = 0;
             return TRUE;
         }
-        
     }
-    
-    
     return FALSE;
 }
-
+//*****************************************************************
 boolean ArrayList_Expand(ArrayList * list)
 {
-    if(list)
+    if(list->size < list->reserved)
+        return TRUE;
+    
+    if(list && list->arr)
     {
-        ArrayList * temp = (ArrayList *)realloc(list, sizeof(ArrayList) * list->reserved + INITIAL_SIZE_STRING_LIST);
+        void * temp = realloc(list->arr, sizeof(void *) * list->reserved + INITIAL_SIZE_STRING_LIST);
         
         if(temp)
         {
-            temp->reserved += INITIAL_SIZE_STRING_LIST;
-            *list = *temp;
+            list->arr = temp;
+            list->reserved += INITIAL_SIZE_STRING_LIST;
             
             return TRUE;
         }
@@ -51,14 +47,11 @@ boolean ArrayList_Expand(ArrayList * list)
     return FALSE;
 
 }
+//***************************************************************
 boolean ArrayList_Add(ArrayList * list, void * item)
 {
     if(list && item && list->size < list->reserved)
     {
-//        list->arr = malloc(sizeof(void));
-//        list->arr[list->size] = malloc(sizeof(item) * INITIAL_SIZE_STRING_LIST);
-        list->arr[list->size] = malloc(sizeof(void) * INITIAL_SIZE_STRING_LIST);
-        
         list->arr[list->size++] = item;
         return TRUE;
     }
@@ -69,94 +62,182 @@ boolean ArrayList_Add(ArrayList * list, void * item)
     
     return FALSE;
 }
-
+//******************************************************************
 void * ArrayList_GetList(ArrayList * list)
 {
-    
+    if(list && list->arr)
+        return list->arr;
     
     return NULL;
 }
+//******************************************************************
 inline size_t ArrayList_GetSize(ArrayList * list)
 {
     if(list)
         return list->size;
     
-    
     return FALSE;
 }
-
-//also need to define
-
-
+//*****************************************************************
 boolean ArrayList_Free(ArrayList * list)
 {
-    
-    
-    
-    return FALSE;
-}
-boolean ArrayList_Remove(ArrayList * list, size_t index)
-{
-    
-    
-    
-    return FALSE;
-}
-boolean ArrayList_RemoveLast(ArrayList *list) //remove last item and updates
-{
-    if(list)
+    if(list && list->arr)
     {
-        void * temp = list->arr[list->arr + list->size - list->arr];
-        free(temp);
+        free(list->arr);
+        list->arr = NULL;
+        list->size = list->reserved = 0;
+        
         return TRUE;
     }
-    
-    
     return FALSE;
 }
+//*****************************************************************
+boolean ArrayList_Remove(ArrayList * list, size_t index)
+{
+    if(list && list->arr && (index < list->size || index < list->reserved))
+    {
+        if(list->arr[index] != NULL)
+        {
+            free(list->arr[index]);
+            list->arr[index] = NULL;
+            list->size--;
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+//******************************************************************
+boolean ArrayList_RemoveLast(ArrayList *list) //remove last item and updates
+{
+    
+    if(list && list->arr && list->size > 0)
+    {
+        size_t last = 0;
+        
+        for(int i = 0; i < list->reserved; i++)
+            if(list->arr[i])
+                last = i;
+        
+        return ArrayList_Remove(list, last);
+    }
+    return FALSE;
+}
+//***********************************************************************
 boolean ArrayList_Set(ArrayList *list, size_t index, void * item) //it will expand if needed  D
 {
-    
-    
-    
+    if(list && list->arr && (index < list->size || index < list->reserved) && list->arr[index])
+    {
+        list->arr[index] = item;
+        list->size++;
+       
+        return TRUE;
+    }
+    else if(list && list->arr && (index > list->size || index > list->reserved))
+    {
+        if(ArrayList_ExpandReserved(list, index))
+        {
+            list->arr[index] = item;
+            list->size++;
+            
+            return TRUE;
+        }
+    }
     return FALSE;
 }
+//************************************************************************
 void * ArrayList_Get(ArrayList *list, size_t index)
 {
-    if(list && index <= list->size)
+    if(list && list->arr && (index < list->size || index < list->reserved) && list->arr[index])
     {
         return list->arr[index];
     }
     
-    
     return NULL;
 }
+//********************************************************************
 boolean ArrayList_Clear(ArrayList * list) //must do compact
 {
-    
-    
+    if(list && list->arr)
+    {
+        for(int i = (int) list->size -1; i >= 0; i--)
+        {
+            free(list->arr[i]);
+            list->arr[i] = NULL;
+        }
+        
+        list->size = 0;
+        
+        return TRUE;
+    }
     
     return FALSE;
 }
+//************************************************************************
 boolean ArrayList_Copy(ArrayList * destination, const ArrayList * source)
 {
-    
-    
+    if(source && destination && source->arr && destination->arr)
+    {
+        free(destination->arr);
+        
+        if(ArrayList_ExpandReserved(destination, source->reserved))
+        {
+            for(int i = 0; i < source->reserved; i++)
+                destination->arr[i] = source->arr[i];
+            
+            destination->size = source->size;
+            destination->reserved = destination->reserved;
+            
+            return TRUE;
+        }
+    }
     
     return FALSE;
 }
+//*******************************************************************
 boolean ArrayList_ExpandReserved(ArrayList * list, size_t reserved)
 {
-    
-    
+    if(list && list->arr && reserved > list->reserved)
+    {
+        void * temp = realloc(list, sizeof(void *) * list->reserved + reserved);
+        
+        if(temp)
+        {
+            list->reserved += reserved;
+            list->arr = temp;
+            
+            return TRUE;
+        }
+    }
+    else if(list && list->arr && reserved < list->reserved && list->size < reserved)
+    {
+        for(size_t i = (list->size - 1); i < list->reserved; i++)
+            free(list->arr[i]);
+        
+        void * temp = realloc(list->arr, sizeof(void *) * reserved);
+        
+        if(temp)
+        {
+            list->arr = temp;
+            list->reserved = reserved;
+            return TRUE;
+        }
+    }
     
     return FALSE;
 }
+//*****************************************************************************
 boolean ArrayList_Compact(ArrayList * list) //it compacts to size + 100 if possible.
 {
-    
-    
-    
+    if(list && list->arr && list->size < (list->reserved - 100))
+    {
+        int last = 0;
+        for(int i = 0; i < list->reserved; i++)
+            if(list->arr[i])
+                last = i;
+        
+        if(last <= (list->size + 100) && ArrayList_ExpandReserved(list, list->size + 100))
+            return TRUE;
+    }
     
     return FALSE;
 }

@@ -306,13 +306,14 @@ int main(int argc, char **argv)
         printf("Error initializing arraylists\n");
         return -1;
     }
-    
     //ArrayList_Add
     for (int i = 0; i < 400; i++){
         String * str = (String *)malloc(sizeof(String));
         String * str2 = (String *)malloc(sizeof(String));
-        String_New(str, "Programming3");
-        String_New(str2,"Programming4");
+        
+        String_New(str,"Programming3 ");
+        String_New(str2,"Programming4 ");
+        
         ArrayList_Add(strListA,str);
         ArrayList_Add(strListB,str2);
     }
@@ -321,14 +322,14 @@ int main(int argc, char **argv)
     String * str2 =  (String *) ArrayList_Get(strListB,100);
     printf("List 1 member 100 = %s ; List 2 Member 100 = %s\n", str1->str,str2->str);
     ArrayList_Copy(strListA,strListB);
-    str1 =  (String *) ArrayList_Get(strListA,100);
-    str2 =  (String *) ArrayList_Get(strListB,100);
+    str1 =  (String *) ArrayList_Get(strListA,40);
+    str2 =  (String *) ArrayList_Get(strListB,10);
     printf("After copy List 1 member 100 = %s ; List 2 Member 100 = %s\n", str1->str,str2->str);
     
     printf("Before clear (B): Size = %zu, reserved = %zu \n",strListB->size,strListB->reserved);
     
     
-    for (int i =0; i < 400; i++)
+    for (int i =0; i < 99; i++)
     {
         //free strings first.
         String * s = (String *)ArrayList_Get(strListB,i);
