@@ -159,15 +159,17 @@ boolean ArrayList_Clear(ArrayList * list) //must do compact
 {
     if(list && list->arr)
     {
-        for(int i = (int) list->size -1; i >= 0; i--)
-        {
-            free(list->arr[i]);
-            list->arr[i] = NULL;
-        }
+//        for(int i = 0; i < list->reserved; i++)
+//        {
+//            void * t = list->arr[i];
+//            if(t != NULL)
+//                free(t);
+//        }
+        
         
         list->size = 0;
         
-        return TRUE;
+        return ArrayList_Compact(list);
     }
     
     return FALSE;
@@ -176,19 +178,37 @@ boolean ArrayList_Clear(ArrayList * list) //must do compact
 boolean ArrayList_Copy(ArrayList * destination, const ArrayList * source)
 {
     if(source && destination && source->arr && destination->arr)
-    {
-        free(destination->arr);
-        
+    {       
         if(ArrayList_ExpandReserved(destination, source->reserved))
         {
             for(int i = 0; i < source->reserved; i++)
+            {
+                if(*(&destination->arr[i]) != NULL)
+                    free(destination->arr[i]);
+                
                 destination->arr[i] = source->arr[i];
+            }
+            
             
             destination->size = source->size;
             destination->reserved = destination->reserved;
             
             return TRUE;
         }
+        
+        for(int i = 0; i < source->reserved; i++)
+        {
+            if(destination->arr[i] != NULL)
+                free(destination->arr[i]);
+            
+            destination->arr[i] = source->arr[i];
+        }
+
+        
+        destination->size = source->size;
+        destination->reserved = destination->reserved;
+        return TRUE;
+        
     }
     
     return FALSE;
@@ -196,46 +216,45 @@ boolean ArrayList_Copy(ArrayList * destination, const ArrayList * source)
 //*******************************************************************
 boolean ArrayList_ExpandReserved(ArrayList * list, size_t reserved)
 {
-    if(list && list->arr && reserved > list->reserved)
+    if(list && list->arr && reserved > list->size)
     {
-        void * temp = realloc(list, sizeof(void *) * list->reserved + reserved);
-        
-        if(temp)
-        {
-            list->reserved += reserved;
-            list->arr = temp;
-            
-            return TRUE;
-        }
-    }
-    else if(list && list->arr && reserved < list->reserved && list->size < reserved)
-    {
-        for(size_t i = (list->size - 1); i < list->reserved; i++)
-            free(list->arr[i]);
-        
         void * temp = realloc(list->arr, sizeof(void *) * reserved);
         
         if(temp)
         {
+            
             list->arr = temp;
             list->reserved = reserved;
+            
             return TRUE;
         }
     }
+//    else if(list && list->arr && reserved < list->reserved && list->size < reserved)
+//    {
+//        void * temp = realloc(list->arr, sizeof(void *) * reserved);
+//        
+//        if(temp)
+//        {
+//            list->arr = temp;
+//            list->reserved = reserved;
+//            return TRUE;
+//        }
+//    }
     
     return FALSE;
 }
 //*****************************************************************************
 boolean ArrayList_Compact(ArrayList * list) //it compacts to size + 100 if possible.
 {
-    if(list && list->arr && list->size < (list->reserved - 100))
+    if(list && list->arr && list->size < (list->reserved - INITIAL_SIZE_STRING_LIST))
     {
         int last = 0;
-        for(int i = 0; i < list->reserved; i++)
+        for(int i = 0; list->size > 0 && i < list->reserved; i++)
             if(list->arr[i])
                 last = i;
         
-        if(last <= (list->size + 100) && ArrayList_ExpandReserved(list, list->size + 100))
+        if(last <= (list->size + INITIAL_SIZE_STRING_LIST) &&
+           ArrayList_ExpandReserved(list, list->size + INITIAL_SIZE_STRING_LIST))
             return TRUE;
     }
     
