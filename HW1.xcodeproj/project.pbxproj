@@ -11,6 +11,7 @@
 		B0E171B41F0326B7006957B3 /* ArrayList.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E171B31F0326B7006957B3 /* ArrayList.c */; };
 		B0E171B61F0326D5006957B3 /* globalconst.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E171B51F0326D5006957B3 /* globalconst.c */; };
 		B0E171B81F032715006957B3 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E171B71F032715006957B3 /* main.c */; };
+		B0E799021F10120700CE1488 /* HashMap.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E799001F10120700CE1488 /* HashMap.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +36,8 @@
 		B0E171B31F0326B7006957B3 /* ArrayList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ArrayList.c; sourceTree = "<group>"; };
 		B0E171B51F0326D5006957B3 /* globalconst.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = globalconst.c; sourceTree = "<group>"; };
 		B0E171B71F032715006957B3 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../main.c; sourceTree = "<group>"; };
+		B0E799001F10120700CE1488 /* HashMap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HashMap.c; sourceTree = "<group>"; };
+		B0E799011F10120700CE1488 /* HashMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HashMap.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +81,8 @@
 			children = (
 				B0E171B71F032715006957B3 /* main.c */,
 				B0E171B11F03269A006957B3 /* String.c */,
+				B0E799001F10120700CE1488 /* HashMap.c */,
+				B0E799011F10120700CE1488 /* HashMap.h */,
 				B0E171B31F0326B7006957B3 /* ArrayList.c */,
 				B0E171B51F0326D5006957B3 /* globalconst.c */,
 				B0E171AE1F03153F006957B3 /* ArrayList.h */,
@@ -147,6 +152,7 @@
 			files = (
 				B0E171B81F032715006957B3 /* main.c in Sources */,
 				B0E171B41F0326B7006957B3 /* ArrayList.c in Sources */,
+				B0E799021F10120700CE1488 /* HashMap.c in Sources */,
 				B0E171B21F03269A006957B3 /* String.c in Sources */,
 				B0E171B61F0326D5006957B3 /* globalconst.c in Sources */,
 			);

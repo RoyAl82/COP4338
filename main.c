@@ -375,7 +375,7 @@ int main(int argc, char **argv)
     
     ArrayList_Set(strListB,10500, strSet);
     
-    String * strSetPrint= (String *) ArrayList_Get(strListB,10500);
+    String * strSetPrint = ArrayList_Get(strListB,10500);
     printf ("New Set :%s\n",strSetPrint->str);
     printf("Before  Loop 11,0000 (B): Size = %zu, reserved = %zu \n",strListB->size,strListB->reserved);
     
@@ -401,7 +401,7 @@ int main(int argc, char **argv)
     free(strListB);
     free(strListA);
     
-    printf("Element 10500 is %s\n",strSetPrint->str);
+    //printf("Element 10500 is %s\n",strSetPrint->str);
     
     
     return 0;

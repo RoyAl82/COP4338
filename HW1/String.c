@@ -12,7 +12,7 @@
 
 
 
-
+//*************************************************************************
 int String_New(String * strObj,char * str)
 {
     if(str == NULL || strObj == NULL)
@@ -39,36 +39,36 @@ int String_New(String * strObj,char * str)
     return 1;
 }
 
-
+//***********************************************************************
 char * String_Get(String * strObj)
 {
-    if(strObj == NULL)
-        return 0;
+    if(strObj)
+        return strObj->str;
     
-    return strObj->str;
+    return 0;
 }
 char String_GetChar(const String *strObj,const size_t index)
 {
-    if(strObj == NULL && index >= strObj->size)
+    if(strObj == NULL || index >= strObj->size)
         return '\0';
     
     return strObj->str[index];
     
 }
-
+//*******************************************************************
 int String_Append(String * strObj, char * strAppend)
 {
     if(strObj && strObj->str)
     {
         size_t nlen = String_ChrLen(strAppend);
         
-        char * tmp = (char *)realloc(strObj->str, sizeof(char) *(strObj->size + nlen + 1));
+        char * tmp = (char *)realloc(strObj->str, sizeof(char) * strObj->size + nlen);
         
         if(!tmp)
         {
             size_t lastLen = strObj->size;
             strObj->str = tmp;
-            strObj->size = strObj->size + nlen;
+            strObj->size = lastLen + nlen;
             
             size_t size = strObj->size;
             
@@ -82,10 +82,10 @@ int String_Append(String * strObj, char * strAppend)
 
     }
     
-    return -3;
+    return 0;
     
 }
-
+//******************************************************************
 int String_EqualLen(String *lhs, String *rhs)
 {
     if(lhs == NULL || rhs == NULL)
@@ -97,7 +97,7 @@ int String_EqualLen(String *lhs, String *rhs)
         return 0;
     
 }
-
+//*****************************************************************
 size_t String_ChrLen(char * str)
 {
     size_t len = 0;
@@ -107,7 +107,7 @@ size_t String_ChrLen(char * str)
     
     return len;
 }
-
+//*******************************************************************
 int String_Equal(String * lhs, String * rhs)
 {
     if(lhs == NULL || rhs == NULL || lhs->size != rhs->size)
@@ -119,7 +119,7 @@ int String_Equal(String * lhs, String * rhs)
     
     return 1;
 }
-
+//*******************************************************************
 void String_Free(String * strObj)
 {
     if(strObj != NULL && strObj->str != NULL)
@@ -130,7 +130,7 @@ void String_Free(String * strObj)
         
     }
 }
-
+//*******************************************************************
 void String_Delete(String * strObj)
 {
     if(strObj != NULL && strObj->str != NULL)
@@ -141,6 +141,7 @@ void String_Delete(String * strObj)
         
     }
 }
+//**********************************************************************
 //define get and set for a given char. only if is within bounds
 void String_SetChar(const String *strObj,const size_t index, const char c)
 {
@@ -148,6 +149,7 @@ void String_SetChar(const String *strObj,const size_t index, const char c)
         strObj->str[index] = c;
     
 }
+//***********************************************************************
 ///Haven't finished
 String * String_Cpy ( String * destination, const String * source )
 {
@@ -167,22 +169,23 @@ String * String_nCpy ( String * destination, const String * source, size_t num )
         return NULL;
     
     
-    char * temp = (char * ) realloc(destination->str, sizeof(char) * (num + 1) );
+    char * temp = (char * ) realloc(destination->str, sizeof(char) * num + 1 );
     
-    if(!temp)
-        return NULL;
+    if(temp)
+    {
+        int i;
+        for(i = 0; i < num; i++)
+            temp[i] = source->str[i];
+        
+        destination->size = num;
+        destination->hashcode = String_CreateHash(destination->str);
+        
+        return destination;
+    }
     
-    int i;
-    for(i = 0; i < num; i++)
-        temp[i] = source->str[i];
-    
-    destination->size = num;
-    destination->hashcode = String_CreateHash(destination->str);
-    
-    return destination;
-    
+    return NULL;
 }
-//Ask about this function
+//*****************************************************************************
 String * String_Cat ( String * destination, const String * source )
 {
     if(!source || !source->str || !destination || !destination->str )
@@ -191,23 +194,25 @@ String * String_Cat ( String * destination, const String * source )
     char * temp = (char *) realloc(destination->str, sizeof(char) *
                                    (destination->size + source->size + 1));
     
-    if(!temp)
-        return NULL;
+    if(temp)
+    {
+        size_t initial = destination->size;
+        
+        size_t i,j;
+        size_t scSize = source->size;
+        
+        for(i = initial, j = 0; j < scSize; i++, j++)
+            temp[i] = source->str[j];
+        
+        destination->size += scSize;
+        destination->hashcode = String_CreateHash(destination->str);
+        
+        return destination;
+    }
     
-    size_t initial = destination->size;
-    
-    size_t i,j;
-    size_t scSize = source->size;
-    
-    for(i = initial, j = 0; j < scSize; i++, j++)
-        temp[i] = source->str[j];
-    
-    destination->size += scSize;
-    destination->hashcode = String_CreateHash(destination->str);
-    
-    return destination;
+    return NULL;
 }
-
+//******************************************************************************
 String * String_nCat ( String * destination, const String * source, size_t num )
 {
    if(!source || !source->str || !destination || !destination->str ||
@@ -232,7 +237,7 @@ String * String_nCat ( String * destination, const String * source, size_t num )
     return NULL;
     
 }
-
+//****************************************************************************
 int String_Cmp ( const String * str1, const String * str2 )
 {
     if(!str1 || !str1->str || !str2 || !str2->str)
@@ -240,8 +245,10 @@ int String_Cmp ( const String * str1, const String * str2 )
     
     size_t size;
     
-    if(str1->size >= str2->size)
-        size = str2->size;
+    if(str1->size > str2->size)
+         return 1;
+    else if(str1->size < str2->size)
+        return -1;
     else
         size = str1->size;
     
@@ -252,16 +259,10 @@ int String_Cmp ( const String * str1, const String * str2 )
         else if(str1->str[i] < str2->str[i])
             return -1;
     }
-            
-    if(str1->size > str2->size)
-        return 1;
-    else if(str1->size < str2->size)
-        return -1;
-    else
-        return 0;
     
+    return 0;
 }
-
+//*************************************************************************
 int String_nCmp ( const String * str1, const String * str2, size_t num )
 {
     if(!str1 || !str1->str || !str2 || !str2->str || num > str1->size || num > str2->size)
@@ -278,6 +279,7 @@ int String_nCmp ( const String * str1, const String * str2, size_t num )
     return 0;
 
 }
+//****************************************************************************
 //Ask about the changing the source
 String * String_Chr (String * str, int character )
 {
@@ -305,7 +307,7 @@ String * String_Chr (String * str, int character )
     
     return NULL;
 }
-
+//**********************************************************************
 size_t String_cSpn ( const String * str1, const String * str2 )
 {
     if(str1 && str1->str && str2 && str2->str)
@@ -322,7 +324,7 @@ size_t String_cSpn ( const String * str1, const String * str2 )
     
     return 0;
 }
-
+//*********************************************************************
 String * String_pBrk (const String * str1, const String * str2 )
 {
     String * temp = NULL;
@@ -340,7 +342,7 @@ String * String_pBrk (const String * str1, const String * str2 )
     }
     return NULL;
 }
-
+//**********************************************************************
 String * String_rChr (const String * str, int character )
 {
     char c = character;
@@ -367,21 +369,21 @@ String * String_rChr (const String * str, int character )
     
     return NULL;
 }
-
+//**************************************************************************
 size_t String_spn ( const String * str1, const String * str2 )
 {
     if(!str1 || !str1->str || !str2 || !str2->str)
         return 0;
     
-    char *sc1;
+    char *sc;
     
-    for (sc1 = str1->str; *sc1 != '\0'; sc1++)
-        if (String_Chr((String *)str2, *sc1) == NULL)
-            return (sc1 - str1->str);
+    for (sc = str1->str; *sc != '\0'; sc++)
+        if (String_Chr((String *)str2, *sc) == NULL)
+            return (sc - str1->str);
     
-    return sc1 - str1->str;
+    return sc - str1->str;
 }
-
+//************************************************************************
 String * String_Str (String * str1, const String * str2 )
 {
     String * temp = (String *) malloc(sizeof(String));
@@ -412,7 +414,7 @@ String * String_Str (String * str1, const String * str2 )
     
     return str1;
 }
-
+//****************************************************************************
 size_t String_Len ( const String * str )
 {
     if(!str || !str->str)
@@ -424,15 +426,15 @@ size_t String_Len ( const String * str )
     return len;
     
 }
-
+//****************************************************************************
 size_t String_GetHashCode(const String * str)
 {
-    if(!str || !str->str)
-        return 0;
+    if(str && str->str)
+        return str->hashcode;
     
-    return str->hashcode;
+    return 0;
 }
-
+//****************************************************************************
 size_t String_CreateHash(const char * str)
 {
     if(!str)
@@ -445,7 +447,7 @@ size_t String_CreateHash(const char * str)
     return hashCode;
     
 }
-
+//**************************************************************************
 String * String_Trim(String * str)
 {
     if(!str || !str->str)
@@ -455,7 +457,7 @@ String * String_Trim(String * str)
         return str;
     return NULL;
 }
-
+//************************************************************************
 String * String_LTrim(String * str)
 {
     if(!str || !str->str)
@@ -471,14 +473,13 @@ String * String_LTrim(String * str)
     while(*c != '\0' && (str->str[i] = *(c++)))
         i++;
     
-    
     str->str[i] = '\0';
     
     String_New(str, str->str);
     
     return str;
 }
-
+//************************************************************************
 String * String_RTrim(String * str)
 {
     if(!str || !str->str)
@@ -495,89 +496,91 @@ String * String_RTrim(String * str)
     while(c <= c1 && (str->str[i] = *(c++)))
         i++;
     
-    
     str->str[i] = '\0';
     
     String_New(str, str->str);
     
     return str;
 }
-
+//************************************************************************
 size_t String_GetCharFromIndex(const String * str, int index)
 {
-    if(!str || !str->str || str->size <= index)
-        return 0;
-    return str->str[index];
+    if(str && str->str && str->size <= index)
+        return str->str[index];
+    
+    return 0;
 }
-
+//*************************************************************************
 int String_IndexOfChar(const String * str, char c)
 {
     if(!str || !str->str || !c)
         return 0;
+    
     int index = 0;
     while( index < str->size && str->str[index++] != c);
     
     return index - 1;
-        
 }
-
+//************************************************************************
 String * String_Lower(String * str)
 {
-    
-    if(!str || !str->str)
-        return 0;
-    
-    for(int i = 0; i < str->size; i++)
+    if(str && str->str)
     {
-        char c = str->str[i];
-        if(c >= 'A' && c <= 'Z')
-            str->str[i] = c + ('a' - 'A');
-    }
-    str->hashcode = String_CreateHash(str->str);
-    
-    return str;
-}
-
-String * String_Upper(String * str)
-{
-    if(!str || !str->str)
-        return 0;
-    
-    for(int i = 0; i < str->size; i++)
-    {
-        char c = str->str[i];
-        if(c >= 'a' && c <= 'z')
-            str->str[i] = c - ('a' - 'A');
-    }
-    
-    str->hashcode = String_CreateHash(str->str);
-    
-    return str;
-}
-
-String * String_Reverse(String * str)
-{
-    if(!str || !str->str || !str->size)
-        return NULL;
-    
-    char * c = (char *) malloc(sizeof(char) * (str->size + 1));
-    
-    if(c)
-    {
-        size_t last = str->size;
-        
-        for(int i = 0; i < last; i++)
-            c[i] = str->str[last - i - 1];
-        
-        if(!String_New(str, c))
-            return NULL;
+        for(int i = 0; i < str->size; i++)
+        {
+            char c = str->str[i];
+            if(c >= 'A' && c <= 'Z')
+                str->str[i] = c + ('a' - 'A');
+        }
+        str->hashcode = String_CreateHash(str->str);
         
         return str;
+    }
+    
+    return 0;
+}
+//**********************************************************************
+String * String_Upper(String * str)
+{
+    if(str && str->str)
+    {
+        for(int i = 0; i < str->size; i++)
+        {
+            char c = str->str[i];
+            if(c >= 'a' && c <= 'z')
+                str->str[i] = c - ('a' - 'A');
+        }
         
+        str->hashcode = String_CreateHash(str->str);
+        
+        return str;
+    }
+    
+    return 0;
+}
+//**********************************************************************
+String * String_Reverse(String * str)
+{
+    if(str && str->str && str->size)
+    {
+        char * c = (char *) malloc(sizeof(char) * str->size + 1);
+        
+        if(c)
+        {
+            size_t last = str->size;
+            
+            for(int i = 0; i < last; i++)
+                c[i] = str->str[last - i - 1];
+            
+            if(!String_New(str, c))
+                return NULL;
+            
+            return str;
+        }
     }
     return NULL;
 }
-
+//********************************************************************
 size_t String_WordCount(const String * str)
 {
     
@@ -591,61 +594,52 @@ size_t String_WordCount(const String * str)
     {
         if(*(c++) != ' ')
             numC++;
-            
     }
     
     return (str->size - numC) + 1;
 }
 
-
+//***********************************************************************
 String * String_StartsWith (const String * str, const String * startsWith)
 {
-    if(!str || !str->str || !startsWith || !startsWith->str)
-        return NULL;
+    if(str && str->str && startsWith && startsWith->str)
+    {
+        int i = 0;
+        
+        while(i < startsWith->size)
+        {
+            if(startsWith->str[i] != str->str[i])
+                return NULL;
+            i++;
+        }
+        
+        return (String *)str;
+    }
+    return NULL;
     
-    int i = 0;
-    
-    while(i < startsWith->size)
-        if(startsWith->str[i] != str->str[i++])
-            return NULL;
-    
-    
-    return (String *)str;
 }//return new string
-
+//**********************************************************************
 String * String_TrimChar(String * str, const char * c)
 {
     char * newC = (char *) calloc(str->size, sizeof(char));
     
-    if(!str || !str->str || !c || !newC)
-        return NULL;
-    
-    
-    char * oldStr = str->str;
-    
-    for(int i = 0; i < str->size; oldStr++)
+    if(str && str->str && c && newC)
     {
-        if(*oldStr != *c)
-            newC[i] = *oldStr;
-    }
-    
-    if(String_New(str, newC))
-    {
-        free(newC);
-        return str;
+        char * oldStr = str->str;
+        
+        for(int i = 0; i < str->size; oldStr++)
+        {
+            if(*(oldStr + i) != *c)
+                newC[i] = *(oldStr + i);
+        }
+        
+        if(String_New(str, newC))
+        {
+            free(newC);
+            free(oldStr);
+            return str;
+        }
     }
     
     return NULL;
 }
-
-
-
-
-
-
-
-
-
-
-
-
