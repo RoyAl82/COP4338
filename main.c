@@ -3,7 +3,9 @@
 #include "String.h"
 #include "globalconst.h"
 #include "ArrayList.h"
-
+#include "HashMap.h"
+void reverse_C(char s[]);
+void itoa(int n, char s[]);
 
 int String_EqualN(String * lhs, String * rhs,size_t n)
 {
@@ -403,8 +405,103 @@ int main(int argc, char **argv)
     
     //printf("Element 10500 is %s\n",strSetPrint->str);
     
+    printf("%zu\n",sizeof(String));
+    printf("%zu\n",sizeof(String*));
+    
+    String * temp = (String*) malloc(sizeof(String));
+    
+    String_New(temp, "Hello");
+    
+    void * tempVoid = temp;
+    
+    size_t * testHashCode = *(&tempVoid) + 16;
+    
+    
+    
+    size_t test = *testHashCode;
+    
+    printf("%zu\n", test);
+    
+    
+    HashMap * myHash = malloc(sizeof(HashMap));
+    
+    if(Hash_New(myHash))
+    {
+        String numStr;
+        for(int i = 0; i < 120; i++)
+        {
+            char num[i + 2];
+            
+            String * temp1 = (String*) malloc(sizeof(String));
+            
+            String_New(temp1, "Hello ");
+            
+            itoa(i, num);
+            String_New(&numStr, num);
+            String_Cat(temp1,&numStr);
+            
+            void * tempVoid = temp1;
+            
+            size_t * testHashCode = *(&tempVoid) + 16;
+            
+            
+            size_t test = *testHashCode;
+            
+            printf("%zu\n", test);
+            
+            if(Hash_Insert(myHash, temp1))
+                printf("Successful\n");
+            else
+                printf("Unsuccessful\n");
+        }
+    }
+    
+    String * find = malloc(sizeof(String));
+    String_New(find, "Hello 99");
+    String * new = Hash_Get_Item(myHash, find);
+    
+    printf("%s\n",new->str);
+    
+    if(Hash_Remove(myHash, find) && (new = Hash_Get_Item(myHash, find)))
+        printf("%s\n",new->str);
+    else
+        printf("Remove successful\n");
+    
     
     return 0;
 }
 
+ /*itoa: convert n to characters in s*/
+void itoa(int n, char s[])
+{
+    int i, sign;
+    if ((sign = n) < 0) /* record sign */
+        n = -n; /* make n positive */
+    i = 0;
+    do { /* generate digits in reverse order */
+        s[i++]=n%10+'0'; /*getnextdigit*/
+    } while ((n /= 10) > 0);
+    if (sign < 0)
+        s[i++] = '-';
+    s[i] = '\0';
+    reverse_C(s);
+}
+void reverse_C(char s[])
+{
+    int i, length;
+    char tmp;
+    
+    length = 0;
+    for (i = 0; s[i] != '\0'; i++) {
+        if (s[i] != '\n')
+            length = i + 1;
+    }
+    
+    for (i = 0; i < length / 2; i++) {
+        tmp = s[i];
+        s[i] = s[length - i - 1];
+        s[length - i - 1] = tmp;
+    }
+    
+}
 

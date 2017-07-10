@@ -12,13 +12,14 @@
 #include <stdio.h>
 #include "globalconst.h"
 
+
 typedef struct
 {
     void ** table;
-    size_t size;
+    size_t currentSize;
     size_t tableSize;
     
-} HashTable;
+} HashMap;
 
 
 typedef struct List
@@ -26,22 +27,36 @@ typedef struct List
     void * item;
     struct List * next;
     
-} item;
+} Item;
 
 
-boolean Hash_Remove(void * item);
+static const int DEFAULT_TABLE_SIZE = 101;
 
-boolean Hash_Rehash();
+boolean Hash_Insert(HashMap * myHash,void * item);
 
-boolean Hash_Find(void * item);
+boolean Hash_New(HashMap * myHash);
 
-boolean Hash_Get_HashCode(void * item);
+boolean Hash_Remove(HashMap * myHash, void * item);
 
-size_t Hash_HashCode(void * item);
+boolean Hash_Rehash(HashMap * myHash);
 
+boolean Hash_Contains(HashMap * myHash, void * item);
 
+size_t Hash_Get_HashCode(void * item);
 
-boolean Hash_Add(void * item);
+size_t Hash_HashingCode(HashMap * myHash, void * item);
+
+boolean Hash_MakeEmpty(HashMap * myHash);
+
+void * Hash_Get_Item(HashMap * myHash, void * item);
+
+boolean Hash_Comparables(void * item1, void * item2);
+
+void * Hash_Get_Item_With_Index(HashMap * myHash, size_t * index);
+
+size_t Hash_nextPrime(size_t n);
+
+boolean Hash_isPrime(size_t n);
 
 
 
