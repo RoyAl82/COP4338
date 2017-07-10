@@ -54,6 +54,8 @@ boolean Hash_Comparables(void * item1, void * item2);
 
 void * Hash_Get_Item_With_Index(HashMap * myHash, size_t * index);
 
+boolean Hash_Delete_HashMap(HashMap * myHash);
+
 size_t Hash_nextPrime(size_t n);
 
 boolean Hash_isPrime(size_t n);

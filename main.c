@@ -466,7 +466,19 @@ int main(int argc, char **argv)
         printf("%s\n",new->str);
     else
         printf("Remove successful\n");
-    
+    String * newItem;
+    if(Hash_MakeEmpty(myHash))
+    {
+        for(size_t i = 0; i < myHash->tableSize; i++)
+        {
+            if((newItem = Hash_Get_Item_With_Index(myHash, &i)))
+               printf("Fail to Empty\n");
+            else
+               printf("HashMap Empty index %zu\n", i);
+        }
+    }    
+    else
+        printf("HashMap Empty Fail\n");
     
     return 0;
 }

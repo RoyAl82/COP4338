@@ -31,9 +31,9 @@ boolean Hash_New(HashMap * myHash)
 //******************************************************************************
 boolean Hash_Insert(HashMap * myHash, void * item)
 {
-    if(myHash && myHash->table && (( (myHash->currentSize * 1.0)- 1) / (myHash->tableSize * 1.0)) < 1 && item)
-    {
-    
+    if(myHash && myHash->table &&
+       (((myHash->currentSize * 1.0)- 1) / (myHash->tableSize * 1.0)) < 1 && item)
+    {    
         size_t hashCode = Hash_HashingCode(myHash, item);
        
         if(myHash->table[hashCode])
@@ -52,19 +52,18 @@ boolean Hash_Insert(HashMap * myHash, void * item)
            
             return TRUE;
         }
-        else if(!myHash->table[hashCode])
-        {
-            Item * newItem = calloc(1,sizeof(Item *));
+        
+        Item * newItem = calloc(1,sizeof(Item *));
             
-            newItem->item = item;
-            newItem->next = NULL;
-            myHash->table[hashCode] = newItem;
-            myHash->currentSize++;
+        newItem->item = item;
+        newItem->next = NULL;
+        myHash->table[hashCode] = newItem;
+        myHash->currentSize++;
             
-            return TRUE;
-        }
+        return TRUE;
     }
-    else if(myHash && myHash->table && ((myHash->currentSize - 1) / myHash->tableSize) >= 1 && item)
+    else if(myHash && myHash->table &&
+            (((myHash->currentSize * 1.0)- 1) / (myHash->tableSize * 1.0)) >= 1 && item)
     {
         if(Hash_Rehash(myHash))
             return Hash_Insert(myHash, item);
@@ -108,13 +107,19 @@ boolean Hash_Comparables(void * item1, void * item2)
 {
     if(item1 && item2)
     {
-        size_t * addr1 = *(&item1) + (sizeof(item1) + sizeof(size_t));
-        size_t valAddr1 = *addr1;
+        size_t * hashAddr1 = item1 + (sizeof(item1) + sizeof(size_t));
+        size_t * propertyAddr1 = item1;
         
-        size_t * addr2 = *(&item2) + (sizeof(item2) + sizeof(size_t));
-        size_t valAddr2 = *addr2;
+        size_t hashCode1 = *hashAddr1;
+        size_t property1 = *propertyAddr1;
         
-        if(valAddr1 == valAddr2)
+        size_t * hashAddr2 = item2 + (sizeof(item2) + sizeof(size_t));
+        size_t * propertyAddr2 = item2;
+        
+        size_t hashCode2 = *hashAddr2;
+        size_t property2 = *propertyAddr2;
+        
+        if(hashCode1 == hashCode2 && property1 == property2)
             return TRUE;
     }    
     
@@ -174,7 +179,7 @@ boolean Hash_Rehash(HashMap * myHash)
 
         size_t newTableSize = Hash_nextPrime(oldTableSize * 2);
         
-        HashMap * newHash = malloc(sizeof(HashMap));
+        HashMap * newHash = calloc(1,sizeof(HashMap));
         
         newHash->table = calloc(newTableSize,sizeof(void*) * newTableSize);
         
@@ -196,7 +201,6 @@ boolean Hash_Rehash(HashMap * myHash)
             }
             
             item++;
-                
         }
         
         free(myHash->table);
@@ -252,11 +256,8 @@ size_t Hash_HashingCode(HashMap * myHash, void * item)
 {
     if(item)
     {
-        size_t tempHash = Hash_Get_HashCode(item);
-        size_t hash = ((tempHash % myHash->tableSize));
-        return hash;
+        return (Hash_Get_HashCode(item) % myHash->tableSize);
     }
-    
     
     return 0;
 }
@@ -265,8 +266,38 @@ boolean Hash_MakeEmpty(HashMap * myHash)
 {
     if(myHash && myHash->table)
     {
-        free(myHash->table);
+        size_t item = 0;
+        
+        while(myHash->currentSize > 0)
+        {
+            if(item >= myHash->tableSize)
+                item = 0;
+            
+            Item * newItem = Hash_Get_Item_With_Index(myHash, &item);
+            if(newItem && newItem->item)
+            {
+                Hash_Remove(myHash, newItem->item);
+            }
+            item++;
+        }
+       
         return TRUE;
+    }
+    
+    return FALSE;
+}
+//***************************************************************************
+boolean Hash_Delete_HashMap(HashMap * myHash)
+{
+    if(myHash && myHash->table)
+    {
+        if(Hash_MakeEmpty(myHash))
+        {
+            free(myHash->table);
+            myHash->table = NULL;
+            myHash->currentSize = 0;
+            myHash->tableSize = 0;
+        }        
     }
     
     return FALSE;
@@ -276,8 +307,6 @@ size_t Hash_nextPrime(size_t n)
 {
     if(n)
     {
-        int div = 2;
-        
         size_t newPrime = n;
         
         boolean isPrime = FALSE;
@@ -285,7 +314,6 @@ size_t Hash_nextPrime(size_t n)
         while(!(isPrime = Hash_isPrime(newPrime)))
         {
                 newPrime++;
-            
         }
         
         if(isPrime)
@@ -299,8 +327,6 @@ boolean Hash_isPrime(size_t n)
 {
     if(n)
     {
-        //int div = 2;
-        
         if (n % 2 == 0)
         {
             return FALSE;
@@ -329,56 +355,4 @@ boolean Hash_isPrime(size_t n)
     
     return FALSE;
 }
-//while(prim && num <= number)
-//{
-//    if(getPrimeNumber(number, num) != 0)
-//    {
-//        prim = true;
-//        if (getNextPrimeNumber(counter) != 0)
-//        {
-//            num = getNextPrimeNumber(counter);
-//        }
-//        counter++;
-//    }
-//    else
-//    {
-//        prim = false;
-//    }
-//    
-//}
-
-//if(prim)
-//{
-//    return number;
-//}
-//else
-//{
-//    return 0;
-//}
-//
-//}
-//private static int getPrimeNumber(int number, int div)
-//{
-//    if (number % div == 0 && number != div )
-//    {
-//        return 0;
-//    }
-//    else
-//    {
-//        return number;
-//    }
-//}
-//
-//private static int getNextPrimeNumber(int num)
-//{
-//    
-//    if (num % 2 == 0)
-//    {
-//        return 0;
-//    }
-//    else
-//    {
-//        return num;
-//    }
-//}
 

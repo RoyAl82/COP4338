@@ -21,7 +21,7 @@ int String_New(String * strObj,char * str)
     size_t len = String_ChrLen(str);
     strObj->size = len;
     
-    char * temp = (char *) malloc(sizeof(char) * len + 1);
+    char * temp = (char *) calloc(len + 1, sizeof(char) * len + 1);
     
     if(!temp)
         return 0;
