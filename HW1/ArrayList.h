@@ -29,32 +29,22 @@ static const int INITIAL_SIZE_STRING_LIST = 100;
 boolean ArrayList_New(ArrayList * list); 
 
 boolean ArrayList_Expand(ArrayList * list);
-
 boolean ArrayList_Add(ArrayList * list, void * item);
 
 void * ArrayList_GetList(ArrayList * list);
-
 inline size_t ArrayList_GetSize(ArrayList * list);
 
 //also need to define
 
 
-boolean ArrayList_Free(ArrayList * list);
-
-boolean ArrayList_Remove(ArrayList * list, size_t index);
-
+boolean ArrayList_Free(ArrayList * list); 
+boolean ArrayList_Remove(ArrayList * list, size_t index); 
 boolean ArrayList_RemoveLast(ArrayList *list); //remove last item and updates
-
 boolean ArrayList_Set(ArrayList *list, size_t index, void * item); //it will expand if needed  D
-
-void * ArrayList_Get(ArrayList *list, size_t index);
-
+void * ArrayList_Get(ArrayList *list, size_t index); 
 boolean ArrayList_Clear(ArrayList * list); //must do compact
-
-boolean ArrayList_Copy(ArrayList * destination, const ArrayList * source);
-
-boolean ArrayList_ExpandReserved(ArrayList * list, size_t reserved);
-
+boolean ArrayList_Copy(ArrayList * destination, const ArrayList * source); 
+boolean ArrayList_ExpandReserved(ArrayList * list, size_t reserved); 
 boolean ArrayList_Compact(ArrayList * list); //it compacts to size + 100 if possible. 
 
 //optional 

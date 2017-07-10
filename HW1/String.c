@@ -511,7 +511,7 @@ size_t String_GetCharFromIndex(const String * str, int index)
     return 0;
 }
 //*************************************************************************
-int String_IndexOfChar(const String * str, char c)
+size_t String_IndexOfChar(const String * str, char c)
 {
     if(!str || !str->str || !c)
         return 0;

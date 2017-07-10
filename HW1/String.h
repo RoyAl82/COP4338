@@ -1,5 +1,16 @@
 //
 //  String.h
+//  HW1
+//
+//  Created by Francisco on 6/27/17.
+//  Copyright © 2017 Francisco. All rights reserved.
+//
+
+#ifndef String_h
+#define String_h
+
+//
+//  String.h
 //  lec2
 //
 //  Created by Francisco on 6/28/15.
@@ -17,12 +28,11 @@ typedef struct
     size_t hashcode;
 } String;
 
-//size_t String_CStr_Len(char * str);
 size_t String_ChrLen(char *s);
 int String_EqualLen(String *lhs, String *rhs);
 int String_New(String * strObj,char * str);
 int String_Equal(String * lhs, String * rhs);
-void String_Delete(String * strObj);
+//void String_Delete(String  ** strObj);
 char * String_Get(String * strObj);
 int String_Append(String * strObj, char * strAppend);
 
@@ -53,7 +63,7 @@ String * String_Trim(String * str);
 String * String_LTrim(String * str);
 String * String_RTrim(String * str);
 size_t String_GetCharFromIndex(const String * str, int index);
-int String_IndexOfChar(const String * str, char c);
+size_t String_IndexOfChar(const String * str, char c);
 String * String_Lower(String * str);
 String * String_Upper(String * str);
 String * String_Reverse(String * str);
@@ -71,3 +81,5 @@ String * String_TrimChar(String * str, const char * c);
 ///void String_FreeStruct(String ** strObj);
 
 #endif
+
+#endif /* String_h */
