@@ -31,62 +31,11 @@ int String_EqualN(String * lhs, String * rhs,size_t n)
 
 int main(int argc, char **argv)
 {
+    String a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w;
     
-    String a;
-    String b;
-    String c;
-    String d;
-    String e;
-    String f;
-    String g;
-    String h;
-    String i;
-    String j;
-    String k;
-    String l;
-    String m;
-    String n;
-    String o;
-    String p;
-    String q;
-    String r;
-    String s;
-    String t;
-    String u;
-    String v;
-    String w;
-    String y;
-    String title;
-    String title1;
-    String aa;
-    String bb;
-    String cc;
-    String dd;
-    String ee;
-    String ff;
-    String gg;
-    String hh;
-    String ii;
-    String jj;
-    String kk;
-    String ll;
-    String mm;
-    String nn;
-    String oo;
-    String pp;
-    String qq;
-    String rr;
-    String ss;
-    String tt;
-    String uu;
-    String vv;
-    String ww;
-    String yy;
-    String zz;
+    String title, title1;
     
-    
-
-    String *iix = (String *) malloc(sizeof(String));
+    String aa,bb,cc,dd,ee,ff,hh,ii;
     
     String_New(&title, "APPENDIX A(String)");
     
@@ -904,7 +853,7 @@ int main(int argc, char **argv)
         printf("didn't remove : %24s\t%6zu\t%8zu\n\n",findItem->str,
                findItem->size,findItem->hashcode);
     else
-        printf("Output : Remove successful\n");    
+        printf("Output : Remove successful\n");
     
     //End HashMap Remove
     
