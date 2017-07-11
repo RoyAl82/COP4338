@@ -141,15 +141,8 @@ boolean ArrayList_Clear(ArrayList * list) //must do compact
 {
     if(list && list->arr)
     {
-        for(int i = 0; i < list->reserved; i++)
-        {
-            if(list->arr[i])
-            {
-                free(list->arr[i]);
-                list->arr[i] = NULL;
-            }
-        }
-        
+        free(list->arr);
+        list->arr = NULL;        
         list->size = 0;
         
         return ArrayList_Compact(list);
@@ -162,34 +155,15 @@ boolean ArrayList_Copy(ArrayList * destination, const ArrayList * source)
 {
     if(source && destination && source->arr && destination->arr)
     {       
-        if(ArrayList_ExpandReserved(destination, source->reserved))
+        if(ArrayList_Clear(destination))
         {
             for(int i = 0; i < source->reserved; i++)
             {
-                if(*(&destination->arr[i]) != NULL)
-                    free(destination->arr[i]);
-                
-                destination->arr[i] = source->arr[i];
+                ArrayList_Add(destination, ArrayList_Get((ArrayList *)source, i));
             }
             
-            destination->size = source->size;
-            destination->reserved = destination->reserved;
-            
             return TRUE;
-        }
-        
-        for(int i = 0; i < source->reserved; i++)
-        {
-            if(destination->arr[i] != NULL)
-                free(destination->arr[i]);
-            
-            destination->arr[i] = source->arr[i];
-        }
-        
-        destination->size = source->size;
-        destination->reserved = destination->reserved;
-        
-        return TRUE;
+        }        
     }
     
     return FALSE;
@@ -243,6 +217,12 @@ boolean ArrayList_Compact(ArrayList * list) //it compacts to size + 100 if possi
         
         return TRUE;
     }
-    
+    else if(list && !list->arr)
+    {
+        list->arr = calloc(sizeof(void*), INITIAL_SIZE_STRING_LIST);
+        list->reserved = INITIAL_SIZE_STRING_LIST;
+        list->size = 0;
+        return TRUE;
+    }
     return FALSE;
 }

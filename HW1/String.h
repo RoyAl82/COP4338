@@ -32,7 +32,7 @@ size_t String_ChrLen(char *s);
 int String_EqualLen(String *lhs, String *rhs);
 int String_New(String * strObj,char * str);
 int String_Equal(String * lhs, String * rhs);
-//void String_Delete(String  ** strObj);
+void String_Delete(String * strObj);
 char * String_Get(String * strObj);
 int String_Append(String * strObj, char * strAppend);
 

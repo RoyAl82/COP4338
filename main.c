@@ -5,9 +5,20 @@
 #include "ArrayList.h"
 #include "HashMap.h"
 
+#define NUM_OF_CHARACTERS 4
+#define NUM_OF_CHARACTERS_CAT 9
+#define NUM_OF_CHARACTERS_N_CMP 6
+#define CHARACTER_INDEX 3
+#define INDEX_OF_CHARACTER 'd'
+#define ARRAYLIST_INDEX_GET 100
+#define ARRAYLIST_EXPAND 10000
+#define ARRAYLIST_ADDING 1000
+#define ARRAYLIST_SET_INDEX 10500
+
+
 
 void reverse_C(char s[]);
-void itoa(int n, char s[]);
+void intToChar(int n, char s[]);
 
 int String_EqualN(String * lhs, String * rhs,size_t n)
 {
@@ -20,484 +31,919 @@ int String_EqualN(String * lhs, String * rhs,size_t n)
 
 int main(int argc, char **argv)
 {
-    String *a = (String *) malloc(sizeof (String));
-    String *b = (String *) malloc(sizeof (String));
-    String *c = (String *) malloc(sizeof (String));
-    String *d = (String *) malloc(sizeof (String));
-    String *e = (String *) malloc(sizeof(String));
-    String *f = (String *) malloc(sizeof(String));
-    String *g = (String *) malloc(sizeof(String));
-    String *h = (String *) malloc(sizeof(String));
-    String *i = (String *) malloc(sizeof(String));
-    String *j = (String *) malloc(sizeof(String));
-    String *k = (String *) malloc(sizeof(String));
-    String *l = (String *) malloc(sizeof(String));
-    String *m = (String *) malloc(sizeof(String));
-    String *n = (String *) malloc(sizeof(String));
-    String *o = (String *) malloc(sizeof(String));
-    String *p = (String *) malloc(sizeof(String));
-    String *q = (String *) malloc(sizeof(String));
-    String *r = (String *) malloc(sizeof(String));
-    String *s = (String *) malloc(sizeof(String));
-    String *t = (String *) malloc(sizeof(String));
-    String *u = (String *) malloc(sizeof(String));
-    String *v = (String *) malloc(sizeof(String));
     
-    String *aa = (String *) malloc(sizeof(String));
-    String *bb = (String *) malloc(sizeof(String));
-    String *cc = (String *) malloc(sizeof(String));
-    String *dd = (String *) malloc(sizeof(String));
-    String *ee = (String *) malloc(sizeof(String));
-    String *ff = (String *) malloc(sizeof(String));
-    String *gg = (String *) malloc(sizeof(String));
-    String *hh = (String *) malloc(sizeof(String));
-    String *ii = (String *) malloc(sizeof(String));
+    String a;
+    String b;
+    String c;
+    String d;
+    String e;
+    String f;
+    String g;
+    String h;
+    String i;
+    String j;
+    String k;
+    String l;
+    String m;
+    String n;
+    String o;
+    String p;
+    String q;
+    String r;
+    String s;
+    String t;
+    String u;
+    String v;
+    String w;
+    String y;
+    String title;
+    String title1;
+    String aa;
+    String bb;
+    String cc;
+    String dd;
+    String ee;
+    String ff;
+    String gg;
+    String hh;
+    String ii;
+    String jj;
+    String kk;
+    String ll;
+    String mm;
+    String nn;
+    String oo;
+    String pp;
+    String qq;
+    String rr;
+    String ss;
+    String tt;
+    String uu;
+    String vv;
+    String ww;
+    String yy;
+    String zz;
+    
+    
+
     String *iix = (String *) malloc(sizeof(String));
     
-    //Appendix A
-    printf("\n\n\n\n\n\n");
-    printf("\t\t\t\t\t\tAPPENDIX A\n");
+    String_New(&title, "APPENDIX A(String)");
     
-    //String_Copy                                                                                                           Done
-    String_New(a, "Star Wars");
-    String_New(b, "");
-    size_t hash0 = String_GetHashCode(b);
-    printf("String_Copy: \n%s\n%s\n", a->str, b->str);
-    String * bnew =String_Cpy(b, a);
-    printf("%s\n", bnew->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", hash0, String_GetHashCode(b));
-    printf("hash a: %zu\nhash b: %zu\nhash bnew: %zu\n",String_GetHashCode(a), String_GetHashCode(b), String_GetHashCode(bnew));
-    if (String_Equal(a,bnew))
-        printf("====>String_Copy a,b are equal\n");
+    //Print Title
+    printf("\n\n\n\n");
+    printf("%40s\n", title.str);
+    printf("%40s\n", "------------------");
+    //End Title
+    
+    //String_Copy Function
+    printf("%15s\n", "String_Copy");
+    printf("%15s\n", "-----------");
+    printf("Before Copy:\n");
+    printf("------------\n");
+    
+    String_New(&a, "Star Wars");
+    String_New(&b, "A Galaxy Far,Far Away");
+    
+    size_t hashA = String_GetHashCode(&a);
+    size_t hashB = String_GetHashCode(&b);
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("Source       : %21s\t%6zu\t%8zu\n",a.str,a.size,hashA);
+    printf("Destinantion : %21s\t%6zu\t%8zu\n\n",b.str,b.size,hashB);
+    
+    printf("After Copy:\n");
+    printf("-----------\n");
+    
+    String * newB = String_Cpy(&b, &a);
+    
+    hashA = String_GetHashCode(&a);
+    hashB = String_GetHashCode(newB);
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("Source       : %21s\t%6zu\t%8zu\n",a.str,a.size,hashA);
+    printf("Destinantion : %21s\t%6zu\t%8zu\n\n",newB->str,newB->size,hashB);
+    
+    //End String_Copy Function
+    
+    //String_Equal Function
+    printf("Are These Strings Equal?\n");
+    printf("------------------------\n");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("Source       : %21s\t%6zu\t%8zu\n",a.str,a.size,hashA);
+    printf("Destinantion : %21s\t%6zu\t%8zu\n\n",newB->str,newB->size,hashB);
+    
+
+    if (String_Equal(&a,newB))
+        printf("Yes, String 1: %2s is equal to String 2: %s\n", a.str, b.str);
     else
-        printf("====>String_Copy a,b are NOT equal\n");
+        printf("No, String 1: %s is equal to String 2: %s\n", a.str, b.str);
+
+    //End String_Equal Function
+    
+    //String_nCopy Function
+    printf("\n%15s\n", "String_nCopy");
+    printf("%15s\n", "------------");
+    printf("Before Copying %2d characters:\n", NUM_OF_CHARACTERS);
+    printf("------------------------------\n");
     
     
-    if (String_GetHashCode(a) == String_GetHashCode(bnew))
-        printf("====>HashCode a,b equal\n");
+    String_New(&c, "Chewbacca");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("Source       : %21s\t%6zu\t%8zu\n",c.str,c.size,c.hashcode);
+    printf("Destinantion : %21s\t%6zu\t%8zu\n\n",b.str,b.size,hashB);
+    
+    printf("After Copying %2d characters:\n", NUM_OF_CHARACTERS);
+    printf("-----------------------------\n");
+    
+    String * newC = String_nCpy(&b, &c,NUM_OF_CHARACTERS);
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("Source       : %21s\t%6zu\t%8zu\n",c.str,c.size,c.hashcode);
+    printf("Destinantion : %21s\t%6zu\t%8zu\n\n",newC->str,newC->size,newC->hashcode);
+    
+    //End String_nCopy Function
+    
+    //String_EqualN Fuction
+    
+    printf("\n%15s\n", "String_EqualN");
+    printf("%15s\n", "-------------");
+    
+    String_New(&d, "Chewbacca");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",d.str,d.size,d.hashcode);
+    printf("String 2 : %25s\t%6zu\t%8zu\n\n",newC->str,newC->size,newC->hashcode);
+    
+    printf("Are these 2 Strings Equal in %2d characters?\n", NUM_OF_CHARACTERS);
+    printf("--------------------------------------\n");
+    
+    if (String_EqualN(&d,newC,NUM_OF_CHARACTERS))
+        printf("Yes, String 1: %2s is equal to String 2: %s in the first %d characters.\n", a.str, b.str, NUM_OF_CHARACTERS);
     else
-        printf("====>HashCode a,b NOT equal\n");
+        printf("No, String 1: %2s is equal to String 2: %s in the first %d characters.\n", a.str, b.str, NUM_OF_CHARACTERS);
     
-    //free(bnew);
+    //End String_EqualN Function
     
-    //String_nCopy                                                                                                          Done
-    String_New(c, "Chewbacca");
-    String_New(d, "");
-    size_t hash1 = String_GetHashCode(d);
-    printf("String_nCopy: \n%s\n%s\n", c->str, d->str);
-    String * dnew =String_nCpy(d,c,4);
-    printf("%s\n", dnew->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", hash1, String_GetHashCode(d));
+    //String_Cat Function
     
-    String ncp;
-    String_New(&ncp,"Chew");
-    if (String_EqualN(dnew,&ncp,4))
-        printf("====>String_nCopy works\n");
-    else
-        printf("====>String_Copy does NOT work\n");
+    printf("\n%15s\n", "String_Cat");
+    printf("%15s\n", "-----------");
     
-    //free(dnew);
-    //String_Cat                                                                                                            Done
-    String_New(e, "R2-");
-    String_New(f, "D2");
-    size_t hash2 = String_GetHashCode(e);
-    String * efnew = String_Cat(e, f);
-    printf("String_Cat: \n%s\n%s\n%s\n", e->str, f->str, efnew->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", hash2, String_GetHashCode(e));
+    printf("Before Cat:\n");
+    printf("------------\n");
     
-    String r2d2;
-    String_New(&r2d2,"R2-D2");
-    if (String_Equal(efnew,&r2d2))
-        printf("====>String_Cat works\n");
-    else
-        printf("====>String_Cat does NOT work\n");
+    String_New(&f, "R2-");
+    String_New(&e, "D2");
     
-    //free(efnew);
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("Source       : %21s\t%6zu\t%8zu\n",e.str,e.size,e.hashcode);
+    printf("Destinantion : %21s\t%6zu\t%8zu\n\n",f.str,f.size,f.hashcode);
+    
+    printf("After Cat:\n");
+    printf("-----------\n");
+    String * newEF = String_Cat(&f, &e);
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("Source       : %21s\t%6zu\t%8zu\n",e.str,e.size,e.hashcode);
+    printf("Destinantion : %21s\t%6zu\t%8zu\n\n",newEF->str,newEF->size,newEF->hashcode);
+    
+    //End String_Cat Function
     
     
-    //String_nCat                                                                                                           Done
-    String_New(g, "Boba ");
-    String_New(h, "Fettus");
-    size_t hash3 = String_GetHashCode(g);
-    printf("String_nCat:\n%s\n%s\n", g->str, h->str);
-    String * gnew =String_nCat(g, h, 9);
-    printf("%s\n", gnew->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", hash3, String_GetHashCode(g));
+    //String_nCat Function
     
-    String boba;
-    String_New(&boba,"Boba Fett");
-    if (String_EqualN(gnew,&boba,9))
-        printf("====>String_nCat works\n");
-    else
-        printf("====>String_nCat does NOT work\n");
+    printf("\n%15s\n", "String_nCat");
+    printf("%15s\n", "------------");
     
-    free(gnew);
+    printf("Before Cat %d characters:\n", NUM_OF_CHARACTERS_CAT);
+    printf("-------------------------\n");
     
-    //String_Cmp                                                                                                            Done
-    String_New(i, "Darth Vader");
-    String_New(j, "Darth Maul");
-    printf("String_Cmp: \n%s\n%s\n%d\n\n", i->str, j->str, String_Cmp(i, j));
+    String_New(&g, "Boba ");
+    String_New(&h, "Fettus");
     
-    //String_Cmp                                                                                                            Done
-    String *ix;
-    String *jx;
-    ix = (String *)malloc(sizeof(String));
-    jx = (String *) malloc(sizeof(String));
-//    ix = malloc(sizeof(String));
-//    jx = malloc(sizeof(String));
-    String_New(ix, "Darth Vader");
-    String_New(jx, "Darth Vader");
-    printf("String_Cmp: \n%s\n%s\n%d\n\n", ix->str, jx->str, String_Cmp(ix, jx));
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("Source       : %21s\t%6zu\t%8zu\n",h.str,h.size,h.hashcode);
+    printf("Destinantion : %21s\t%6zu\t%8zu\n\n",g.str,g.size,g.hashcode);
     
-    String_Delete(ix);
-    String_Delete(jx);
-    free(ix);
-    free(jx);
-    //String_nCmp                                                                                                           Done
-    String_New(k, "Gen. Greivous");
-    String_New(l, "Gen. Veers");
-    printf("String_nCmp: \n%s\n%s\n%d\n\n", k->str, l->str, String_nCmp(k, l, 6));
+    printf("After Cat %d characters:\n", NUM_OF_CHARACTERS_CAT);
+    printf("------------------------\n");
+    String * newGH = String_nCat(&g, &h, NUM_OF_CHARACTERS_CAT);
     
-    //String_Chr                                                                                                            Done
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("Source       : %21s\t%6zu\t%8zu\n",h.str,h.size,h.hashcode);
+    printf("Destinantion : %21s\t%6zu\t%8zu\n\n",newGH->str,newGH->size,newGH->hashcode);
     
-    String_New(m, "do or do not, there is no try");
-    printf("String_Chr: \n%s\n%s\n\n", m->str, String_Chr(m, 'h')->str);
+    //End String_nCat Function
     
-    //String_cSpn                                                                                                           Done
-    String_New(n, "fcba73");
-    String_New(o, "1234567890");
-    printf("String_cSpn: \n%s\n%s\n%zu\n\n", n->str, o->str, String_cSpn(n, o));
-    //it should be 5
-    //String_pBrk                                                                                                           Done
-    String_New(p, "Death Star");
-    String_New(q, "aeiou");
-    printf("String_pBrk: \n%s\n%s\n%s\n\n", p->str, q->str, String_pBrk(p, q)->str);
+    //String_Cmp Function
+    printf("\n%15s\n", "String_Cmp");
+    printf("%15s\n", "------------");
     
-    //String_rChr                                                                                                           Done
-    String_New(r, "do or do not, there is no try");
-    size_t r11 = String_GetHashCode(r);
-    String * r12 = String_rChr(r, 't');
-    printf("String_rChr: \n%s\n%s\n", r->str, r12->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", r11, String_GetHashCode(r12));
+    String_New(&i, "Darth Vader");
+    String_New(&j, "Darth Maul");
     
-    //String_Spn
-    String_New(s, "129th");
-    String_New(t, "1234567890");
-    printf("String_Spn: \n%s\n%s\n%zu\n\n", s->str, t->str, String_spn(s, t));
-    // spn here should return 3.
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",i.str,i.size,i.hashcode);
+    printf("String 2 : %25s\t%6zu\t%8zu\n\n",j.str,j.size,j.hashcode);
     
-    //String_Str
-    // printf("\n===>String_STR: Not present\n");
-    String_New(u, "No, I am your mother");
-    String_New(v, "your");
-    size_t u1 = u->hashcode;
-    printf("String_Str:\n%s\n", u->str);
+    printf("Is String 1 greater(1), equal(0), or less(-1) than String 2?\n");
+    printf("------------------------------------------------------------\n");
+    size_t comp;
+    printf("String 1 is %s %s String 2\n", (((comp = String_Cmp(&i, &j)) == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), ((comp != 0) ? "than" : ""));
     
-    u = String_Str(u, v);
+    String_New(&i, "Darth Vader");
+    String_New(&j, "Darth Vader");
     
-    printf("\n%s\t\t\n", u->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", u1, String_GetHashCode(u));
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",i.str,i.size,i.hashcode);
+    printf("String 2 : %25s\t%6zu\t%8zu\n\n",j.str,j.size,j.hashcode);
     
-    //    //String_Len                                                                                                            Done
-    String_New(v, "Jabba The Hutt");
-    printf("String_Len: \n%s\n%zu\n\n", v->str, String_Len(v));
+    printf("Is String 1 greater(1), equal(0), or less(-1) than String 2?\n");
+    printf("------------------------------------------------------------\n");
+   
+    printf("String 1 is %s %s String 2\n", (((comp = String_Cmp(&i, &j)) == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), (comp != 0) ? ("than") : (""));
     
+    String_New(&i, "Gen. Greivous");
+    String_New(&j, "Gen. Veers");
     
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",i.str,i.size,i.hashcode);
+    printf("String 2 : %25s\t%6zu\t%8zu\n\n",j.str,j.size,j.hashcode);
     
+    printf("Is String 1 greater(1), equal(0), or less(-1) than String 2?\n");
+    printf("------------------------------------------------------------\n");
+   
+    printf("String 1 is %s %s String 2\n", (((comp = String_Cmp(&i, &j)) == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), ((comp != 0) ? "than" : ""));
     
+    //End String_Cmp Function
     
+    //String_nCmp Function
     
-    printf("========================================================================\n\n");
-    printf("\t\t\t\tAPPENDIX B\n\n");
+    printf("\n%15s\n", "String_nCmp");
+    printf("%15s\n", "------------");
     
-    //Appendix B
+    String_New(&k, "Gen. Greivous");
+    String_New(&l, "Gen. Veers");
     
-    //String_Trim                                                                                                           Done
-    String_New(aa, "  Clone Troopers  ");
-    size_t aa1 = String_GetHashCode(aa);
-    printf("String_Trim: \n.%s.\n", aa->str);
-    printf(".%s.\n", String_Trim(aa)->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", aa1, String_GetHashCode(aa));
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",k.str,k.size,k.hashcode);
+    printf("String 2 : %25s\t%6zu\t%8zu\n\n",l.str,l.size,l.hashcode);
     
-    //String_LTrim                                                                                                          Done
-    String_New(bb, "  Luke Skywalker    ");
-    size_t bb1 = String_GetHashCode(bb);
-    printf("String_LTrim:%s; Length:%zu\n", bb->str,bb->size);
-    String * ltrim =  String_LTrim(bb);
-    printf("Old Hash: %zu\nNew Hash: %zu\n", bb1, String_GetHashCode(bb));
-    printf("String_LTrim After:%s; Length:%zu\n\n", ltrim->str,ltrim->size);
-    //lenght old should be 20 and old 18... only remove 2 spaces
+    printf("Is String 1 greater(1), equal(0), or less(-1) than String 2?\n");
+    printf("------------------------------------------------------------\n");
+    printf("String 1 is %s %s String 2\n", (((comp = String_nCmp(&k, &l,NUM_OF_CHARACTERS_N_CMP)) == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), ((comp != 0) ? "than" : ""));
     
-    //String_RTrim                                                                                                          Done
-    String_New(cc, "   Jabba The Hutt   ");
-    //size_t cc1 = String_GetHashCode(cc);
-    printf("String_RTrim:%s; Length:%zu\n", cc->str,cc->size);
-    String * rtrim =  String_RTrim(cc);
-    printf("%s.\n", String_RTrim(cc)->str);
-    printf("String_LTrim After:%s; Length:%zu\n\n", rtrim->str,rtrim->size);
-    //old len = 20 , new should be 17 ... remove 3 spaces
+    //End String_nCmp Function
     
-    //String_GetCharFromIndex                                                                                               Done
-    String_New(dd, "ABCDE");
-    printf("String_GetCharFromIndex 3 should b D: \n%s\n%c\n\n", dd->str, (char) String_GetCharFromIndex(dd, 3));
+    //String_Chr
+    printf("\n%15s\n", "String_Chr");
+    printf("%15s\n", "-----------");
     
-    //String_IndexOfChar                                                                                                    Done
-    String_New(ee, "abcde");
-    printf("String_IndexOfChar d should be 3: \n%s\n%d\n\n", ee->str, String_IndexOfChar(ee, 'd'));
+    String_New(&m, "Do or Do not, there is no try");
     
-    //String_Lower                                                                                                          Done
-    String_New(ff, "ABCDE");
-    size_t ff1 = ff->hashcode;
-    printf("String_Lower: \n%s\n", ff->str);
-    printf("%s\n", String_Lower(ff)->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", ff1, String_GetHashCode(ff));
+    String * newM = String_Chr(&m, 'h');
     
-    //String_Upper                                                                                                          Done
-    String_New(gg, "abcde");
-    size_t gg1 = String_GetHashCode(gg);
-    printf("String_Upper: \n%s\n", gg->str);
-    printf("%s\n", String_Upper(gg)->str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", gg1, String_GetHashCode(gg));
-    
-    //String_Reverse                                                                                                        Done
-    String_New(hh, "0123456789");
-    size_t hh1 = String_GetHashCode(hh);
-    printf("String_Reverse: \n%s\n", hh->str);
-    printf("%s\n", String_Reverse(hh)-> str);
-    printf("Old Hash: %zu\nNew Hash: %zu\n\n", hh1, String_GetHashCode(hh));
-    
-    //String_WordCount                                                                                                      Done
-    String_New(ii, "Yoda Obi Ani");
-    printf("String_WordCount: \n%s\n%zu\n\n", ii->str, String_WordCount(ii));
-    //should be 3
-    
-    String_New(iix, "First Homework : 100 points");
-    printf("String_WordCount: \n%s\n%zu\n\n", iix->str, String_WordCount(iix));
-    //should be 5
+    printf("Source : %31s\t%6zu\t%8zu\n",m.str,m.size,m.hashcode);
+    printf("Output : %31s\t%6zu\t%8zu\n\n",newM->str,newM->size,newM->hashcode);
     
     
-    /// free memory
-    free(a);
-    free(b);
-    free(c);
-    free(d);
-    free(e);
-    free(f);
-    free(g);
-    free(h);
-    free(i);
-    free(j);
-    free(k);
-    free(l);
-    free(m);
-    free(n);
-    free(o);
-    free(q); free(r); free(s); free(t); free(u); free(v);
-    /// free memory
-    free(aa); free(bb); free(cc); free(dd); free(ee); free(ff); free(gg); free(hh);
-    free(ii); free(iix);
+    //End String_Chr
+    
+    //String_cSpn Function
+    
+    printf("\n%15s\n", "String_cSpn");
+    printf("%15s\n", "------------");
+    
+    String_New(&n, "fcba73");
+    String_New(&o, "1234567890");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",n.str,n.size,n.hashcode);
+    printf("String 2 : %25s\t%6zu\t%8zu\n\n",o.str,o.size,o.hashcode);
+    printf("------------\n");
+    printf("Output : %zu\n", String_cSpn(&n,&o));
+    
+    //End String_cSpn Function
+    
+    //String_pBrk Function
+    printf("\n%15s\n", "String_pBrk");
+    printf("%15s\n", "------------");
+    
+    String_New(&p, "Death Star");
+    String_New(&q, "aeiou");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",p.str,p.size,p.hashcode);
+    printf("String 2 : %25s\t%6zu\t%8zu\n",q.str,q.size,q.hashcode);
+    printf("Output   : %25s\t%6zu\t%8zu\n\n", String_pBrk(&p,&q)->str,String_pBrk(&p,&q)->size,String_pBrk(&p,&q)->hashcode) ;
+    
+    //End String_pBrk Function
+    
+    //String_rChr Function
+    printf("\n%15s\n", "String_rChr");
+    printf("%15s\n", "-----------");
+    
+    String_New(&m, "Do or Do not, there is no try");
+    
+    String * newMr = String_rChr(&m, 't');
+
+    printf("Source : %31s\t%6zu\t%8zu\n",m.str,m.size,m.hashcode);
+    printf("Output : %31s\t%6zu\t%8zu\n\n",newMr->str,newMr->size,newMr->hashcode);
+    
+    //End String_rChr Function
+    
+    //String_Spn Function
+    printf("\n%15s\n", "String_Spn");
+    printf("%15s\n", "------------");
+    
+    String_New(&s, "129th");
+    String_New(&t, "1234567890");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",s.str,s.size,s.hashcode);
+    printf("String 2 : %25s\t%6zu\t%8zu\n",t.str,t.size,t.hashcode);
+    size_t stVal = String_spn(&s, &t);
+    printf("Output   : %25zu\n\n", stVal);
+    
+    //End Spring_Spn Function
+    
+    //String_Str Function
+    printf("\n%15s\n", "String_Str");
+    printf("%15s\n", "------------");
+    
+    String_New(&u, "No, I am your mother");
+    String_New(&v, "your");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",u.str,u.size,u.hashcode);
+    printf("String 2 : %25s\t%6zu\t%8zu\n",v.str,v.size,v.hashcode);
+    
+    String * newUV = String_Str(&u, &v);
+    
+    printf("Output   : %25s\t%6zu\t%8zu\n\n", newUV->str,newUV->size,newUV->hashcode) ;
+    
+    //End String_Str Function
+    
+    //String_Len
+    printf("\n%15s\n", "String_Len");
+    printf("%15s\n", "------------");
+    
+    String_New(&w, "Jabba The Hutt");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",w.str,w.size,w.hashcode);
+    
+    stVal = String_Len(&w);
+    
+    printf("Output   : %35zu\n\n", stVal);
+    
+    //End String_Len
+    
+    //**************************** APPENDIX B *********************
+    String_New(&title1, "APPENDIX B");
+    
+    //Print Title
+    printf("\n\n\n");
+    printf("%40s\n", title1.str);
+    printf("%40s\n", "-----------");
+    //End Title
+    
+    //String_Trim Function
+    printf("\n%15s\n", "String_Trim");
+    printf("%15s\n", "------------");
+    
+    String_New(&aa, "  Clone Troopers  ");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : \t->|%s|<-\t%6zu\t%8zu\n",aa.str,aa.size,aa.hashcode);
+    String * newAA = String_Trim(&aa);
+    printf("Output   : \t\t->|%s|<-\t%6zu\t%8zu\n\n",newAA->str,newAA->size,newAA->hashcode);
+    
+    //End String_Trim Function
+
+    //String_LTrim Function
+    printf("\n%15s\n", "String_LTrim");
+    printf("%15s\n", "------------");
+    
+    String_New(&bb, "  Luke Skywalker    ");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 :->|%s|<-\t%6zu\t%8zu\n",bb.str,bb.size,bb.hashcode);
+    String * newBB = String_LTrim(&bb);
+    printf("Output   : \t->|%s|<-\t%6zu\t%8zu\n\n",newBB->str,newBB->size,newBB->hashcode);
+    
+    //End String_LTrim Function
+    
+    //String_RTrim Function
+    printf("\n%15s\n", "String_RTrim");
+    printf("%15s\n", "------------");
+    
+    String_New(&cc, "   Jabba The Hutt   ");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 :->|%s|<-\t%6zu\t%8zu\n",cc.str,cc.size,cc.hashcode);
+    String * newCC = String_RTrim(&cc);
+    printf("Output   : \t ->|%s|<-\t%6zu\t%8zu\n\n",newCC->str,newCC->size,newCC->hashcode);
+    
+    //End String_RTrim Function
+    
+    //String_GetCharFromIndex Function
+    printf("\n%15s\n", "String_GetCharFromIndex");
+    printf("%15s\n", "-----------------------");
+    
+    String_New(&dd, "ABCDE");
+    printf("The Index is %d\n", CHARACTER_INDEX);
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",dd.str,dd.size,dd.hashcode);
+    size_t newDD = String_GetCharFromIndex(&dd, CHARACTER_INDEX);
+    printf("Output   : %25c\n\n",(char)newDD);
+    
+    //End String_GetCharFromIndex Function
+    
+    //String_IndexOfChar Function
+    printf("\n%15s\n", "String_IndexOfChar");
+    printf("%15s\n", "------------------");
+    
+    String_New(&ee, "abcde");
+    printf("The character is %c\n", INDEX_OF_CHARACTER);
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",ee.str,ee.size,ee.hashcode);
+    size_t indexEE = String_IndexOfChar(&ee, INDEX_OF_CHARACTER);
+    printf("Output   : %25zu\n\n",indexEE);
+    
+    //End String_IndexOfChar Function
+    
+    //String_Lower Function
+    printf("\n%15s\n", "String_Lower");
+    printf("%15s\n", "------------");
+    
+    String_New(&ff, "ABCDE");
+    
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",ff.str,ff.size,ff.hashcode);
+    String * newFF = String_Lower(&ff);
+    printf("Output   : %25s\t%6zu\t%8zu\n\n",newFF->str,newFF->size,newFF->hashcode);
+    
+    //End String_Lower Function
+    
+    //String_Upper Function
+    printf("\n%15s\n", "String_Upper");
+    printf("%15s\n", "------------");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",ee.str,ee.size,ee.hashcode);
+    String * newEE = String_Upper(&ee);
+    printf("Output   : %25s\t%6zu\t%8zu\n\n",newEE->str,newEE->size,newEE->hashcode);
+    
+    //End String_Upper Function
+    
+    //String_Reverse Function
+    printf("\n%15s\n", "String_Reverse");
+    printf("%15s\n", "---------------");
+    String_New(&hh, "0123456789");
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",hh.str,hh.size,hh.hashcode);
+    String * newHH = String_Reverse(&hh);
+    printf("Output   : %25s\t%6zu\t%8zu\n\n",newHH->str,newHH->size,newHH->hashcode);
+    
+    //End String_Reverse Function
+    
+    //String_WordCount Function
+    printf("\n%15s\n", "String_WordCount");
+    printf("%15s\n", "----------------");
+    String_New(&ii, "Yoda Obi Ani");
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",ii.str,ii.size,ii.hashcode);
+    size_t wordCountII = String_WordCount(&ii);
+    printf("Output   : %25zu\n\n",wordCountII);
+    
+    String_Delete(&ii);
+    String_New(&ii, "First Homework : 100 points");
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("String 1 : %25s\t%6zu\t%8zu\n",ii.str,ii.size,ii.hashcode);
+    wordCountII = String_WordCount(&ii);
+    printf("Output   : %25zu\n\n",wordCountII);
+    
+    //End String_WordCount Function
+    
+    //**************************** ArrayList *******************************
     
     ArrayList * strListA = (ArrayList *) malloc(sizeof(ArrayList));
     ArrayList * strListB = (ArrayList *) malloc(sizeof(ArrayList));
-    boolean checkList = ArrayList_New(strListA);
-    boolean checkList2 = ArrayList_New(strListB);
     
-    printf("List2 created? %d\n",checkList2);
-    
-    
-    if (!checkList || !checkList2)
+    if (!ArrayList_New(strListA) || !ArrayList_New(strListB))
     {
-        printf("Error initializing arraylists\n");
+        printf("Error initializing ArrayLists\nExiting.....\n");
         return -1;
     }
-    //ArrayList_Add
+    
+    
     for (int i = 0; i < 300; i++){
         String * str = (String *)malloc(sizeof(String));
         String * str2 = (String *)malloc(sizeof(String));
         
+        String numStr;
+        char num[i + 2];
+        intToChar(i, num);
+        String_New(&numStr, num);
+        
+        
         String_New(str,"Programming3 ");
+        String_Cat(str,&numStr);
+        
         String_New(str2,"Programming4 ");
+        String_Cat(str2,&numStr);
         
         ArrayList_Add(strListA,str);
         ArrayList_Add(strListB,str2);
     }
+    //ArrayList_Get Function
+    printf("\n%15s\n", "ArrayList_Get");
+    printf("%15s\n", "----------------");
+    printf("The index is %d\n", ARRAYLIST_INDEX_GET);
+    String * str1 =  (String *) ArrayList_Get(strListA,ARRAYLIST_INDEX_GET);
+    String * str2 =  (String *) ArrayList_Get(strListB,ARRAYLIST_INDEX_GET);
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("ArrayList 1 member : %s\t%6zu\t%8zu\n",str1->str,str1->size,str1->hashcode);
+    printf("ArrayList 2 member : %s\t%6zu\t%8zu\n\n",str2->str,str2->size,str2->hashcode);
     
-    String * str1 =  (String *) ArrayList_Get(strListA,100);
-    String * str2 =  (String *) ArrayList_Get(strListB,100);
-    printf("List 1 member 100 = %s ; List 2 Member 100 = %s\n", str1->str,str2->str);
+    
+    //End ArrayList_Get Function
+    
+    //ArrayList_Copy Function
+    
+    printf("\n%15s\n", "ArrayList_Copy");
+    printf("%15s\n", "----------------");
     ArrayList_Copy(strListA,strListB);
-    str1 =  (String *) ArrayList_Get(strListA,100);
-    str2 =  (String *) ArrayList_Get(strListB,100);
-    printf("After copy List 1 member 100 = %s ; List 2 Member 100 = %s\n", str1->str,str2->str);
+    printf("The member's index after copy is  %d\n", ARRAYLIST_INDEX_GET);
+    str1 =  (String *) ArrayList_Get(strListA,ARRAYLIST_INDEX_GET);
+    str2 =  (String *) ArrayList_Get(strListB,ARRAYLIST_INDEX_GET);
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    printf("ArrayList 1 member : %s\t%6zu\t%8zu\n",str1->str,str1->size,str1->hashcode);
+    printf("ArrayList 2 member : %s\t%6zu\t%8zu\n\n",str2->str,str2->size,str2->hashcode);
+
+    //End ArrayList_Copy Function
     
-    printf("Before clear (B): Size = %zu, reserved = %zu \n",strListB->size,strListB->reserved);
+    //ArrayList_Clear Function
+    printf("\n%15s\n", "ArrayList_Clear");
+    printf("%15s\n\n", "----------------");
+    printf("Before Clear: \n");
+    printf("------------\n");
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
+    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
+    printf("After Clear: \n");
+    printf("------------\n");
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
+    if(ArrayList_Clear(strListA))
+        printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    else
+        printf("ArrayList 1: ERROR Clearing!\n");
+    
+    if(ArrayList_Clear(strListB))
+        printf("ArrayList 2: %22zu\t%10zu\n",strListB->size,strListB->reserved);
+    else
+        printf("ArrayList 2: ERROR Clearing!\n");
+    printf("\n");
+    
+    //End ArrayList_Clear Function
+    
+    //ArrayList_ExpandReserved Function
+    printf("\n%15s\n", "ArrayList_ExpandReserved");
+    printf("%15s\n\n", "-------------------------");
+    
+    printf("Before Expand: \n");
+    printf("------------\n");
+    
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
+    
+    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
+    
+    printf("After Expand: \n");
+    printf("-------------\n");
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
+    
+    if(ArrayList_ExpandReserved(strListA, ARRAYLIST_EXPAND))
+        printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    else
+        printf("ArrayList 1: ERROR Expanding!\n");
+    
+    if(ArrayList_ExpandReserved(strListB, ARRAYLIST_EXPAND))
+        printf("ArrayList 2: %22zu\t%10zu\n",strListB->size,strListB->reserved);
+    else
+        printf("ArrayList 2: ERROR Expanding!\n");
+    printf("\n");
     
     
-    for (int i =0; i < 110; i++)
+    
+    //End ArrayList_ExpandReserved Function
+    
+    //ArrayList Adding
+    printf("\n%15s\n", "ArrayList Adding");
+    printf("%15s\n\n", "-----------------");
+    
+    printf("Before Adding: \n");
+    printf("------------\n");
+    
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
+    
+    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
+    
+    printf("After Adding %d: \n", ARRAYLIST_ADDING);
+    printf("-------------\n");
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
+    
+    for (int i = 0; i < ARRAYLIST_ADDING; i++)
     {
-        //free strings first.
-        String * s = (String *)ArrayList_Get(strListB,i);
-        //if your clear does not remove, called remove
-        // ArrayList_Remove(strListB, i);
-        free(s->str);
+        String numStr;
+        char num[i + 2];
+        intToChar(i, num);
+        String_New(&numStr, num);
         
-    }
-    //clear list B
-    ArrayList_Clear(strListB);
-    //if needed called ArrayList_Compact (if you don't call it in clear)
-    //ArrayList_Compact(strListB);
-    
-    printf("After clear (B): Size = %zu, reserved = %zu \n",strListB->size,strListB->reserved);
-    
-    
-    ArrayList_ExpandReserved(strListB, 10000);
-    printf("After expand reserved (B): Size = %zu, reserved = %zu \n",strListB->size,strListB->reserved);
-    
-    for (int i = 0; i < 1000; i++){
         String * str = (String *)malloc(sizeof(String));
-        String_New(str,"Programming Class");
+        
+        String_New(str,"Programming Class ");
+        
+        String_Cat(str,&numStr);
+        
         ArrayList_Add(strListB,str);
     }
     
-    printf("After adding 1000 (B): Size = %zu, reserved = %zu \n",strListB->size,strListB->reserved);
+    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
     
-    for (int i = 0; i < 10000; i++){
+    printf("After Adding %d: \n", ARRAYLIST_EXPAND);
+    printf("-------------\n");
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
+    for (int i = 0; i < ARRAYLIST_EXPAND; i++)
+    {
+        String numStr;
+        char num[i + 2];
+        intToChar(i, num);
+        String_New(&numStr, num);
+        
         String * str = (String *)malloc(sizeof(String));
-        String_New(str,"Programming Class");
+        
+        String_New(str,"Programming Class ");
+        
+        String_Cat(str,&numStr);
+        
         ArrayList_Add(strListB,str);
     }
+    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
     
-    //str1 = ArrayList_Get(strListB,1000);
-    //str2 = ArrayList_Get(strListB,5000);
+    //End ArrayLIst Adding
     
-    //printf("List member 1000 = %s ; List Member 5000 = %s\n", str1->str,str2->str);
-    printf("After adding 10,000 more (now 11,000) (B): Size = %zu, reserved = %zu \n",strListB->size,strListB->reserved);
+    //ArrayList_Set Function
+    printf("\n%15s\n", "ArrayList_Set");
+    printf("%15s\n\n", "------------");
+    printf("Before Setting index %d: \n", ARRAYLIST_SET_INDEX);
+    printf("------------\n");
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
     
-    //modify one of them
+    
+    String * newStrListB = ArrayList_Get(strListB, ARRAYLIST_SET_INDEX);
+    printf("List Item : %24s\t%6zu\t%8zu\n\n",newStrListB->str,
+           newStrListB->size,newStrListB->hashcode);
+    
+    printf("After Setting index %d: \n", ARRAYLIST_SET_INDEX);
+    printf("------------\n");
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    
     String * strSet = (String *)malloc(sizeof(String));
     String_New(strSet,"Programming 3 Class");
+    ArrayList_Set(strListB,ARRAYLIST_SET_INDEX, strSet);
     
-    ArrayList_Set(strListB,10500, strSet);
+    newStrListB = ArrayList_Get(strListB, ARRAYLIST_SET_INDEX);
+    printf("List Item : %24s\t%6zu\t%8zu\n",newStrListB->str,
+           newStrListB->size,newStrListB->hashcode);
     
-    String * strSetPrint = ArrayList_Get(strListB,10500);
-    printf ("New Set :%s\n",strSetPrint->str);
-    printf("Before  Loop 11,0000 (B): Size = %zu, reserved = %zu \n",strListB->size,strListB->reserved);
+    //End ArrayList_Set Function
     
-    //    printf("Testing getSize for B now = %zu\n",ArrayList_GetSize(strListB));
-    //
-    //    printf("Testing getSize for A now = %zu\n",ArrayList_GetSize(strListA));
-    printf("\n The following indexes are NULL: ");
-    for (int i =11000; i >=0; i--)
+    //ArrayList_RemoveLast Function
+    printf("\n%15s\n", "ArrayList_RemoveLast");
+    printf("%15s\n\n", "-------------------");
+    
+    printf("Before RemoveLast: \n");
+    printf("------------------\n");
+    
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
+    
+    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
+    
+    printf("After RemoveLast: \n");
+    printf("-------------\n");
+    
+    size_t reserved = strListB->reserved;
+    
+    for (int i = (int)reserved; i >= 0; i--)
     {
         String * s = (String *) ArrayList_Get(strListB,i);
-        if (s == NULL)
-            printf("%d ",i);
-        else
+        if (s)
             free(s->str);
+            
         ArrayList_RemoveLast(strListB);
     }
     printf("\n");
-    printf("After  Loop 11,0000 (B): Size = %zu, reserved = %zu \n",strListB->size,strListB->reserved);
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
+    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
     
-    //I'm leaking strings in A but it is ok
-    //because I'm exiting now and it is main to be a test.
-    //but you can do the loop yourself .
-    free(strListB);
-    free(strListA);
+        
+    //End ArrayList_RemoveLast Function
     
-    //printf("Element 10500 is %s\n",strSetPrint->str);
+    //ArrayList_Compact Function
+    printf("\n%15s\n", "ArrayList_Compact");
+    printf("%15s\n\n", "-------------------");
     
-    printf("%zu\n",sizeof(String));
-    printf("%zu\n",sizeof(String*));
+    printf("Before Compact: \n");
+    printf("------------------\n");
     
-    String * temp = (String*) malloc(sizeof(String));
+    printf("%35s\t%10s\n", "Size", "Reserved");
+    printf("%35s\t%10s\n", "----", "--------");
     
-    String_New(temp, "Hello");
+    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
     
-    void * tempVoid = temp;
+    printf("After Compact: \n");
+    printf("-------------\n");
+    ArrayList_Compact(strListA);
+    ArrayList_Compact(strListB);
     
-    size_t * testHashCode = *(&tempVoid) + 16;
+    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
     
+    //End ArrayList_Compact Function
     
+//****************************** HashMap *******************************
+    //Create HashTable
     
-    size_t test = *testHashCode;
+    HashMap myHash;
     
-    printf("%zu\n", test);
-    
-    
-    HashMap * myHash = malloc(sizeof(HashMap));
-    
-    if(Hash_New(myHash))
+    if(Hash_New(&myHash))
     {
+        printf("\n%15s\n", "HashMap New");
+        printf("%15s\n\n", "-------------------");
+        
+        printf("Before Initialization: \n");
+        printf("---------------------\n");
+        
+        printf("%35s\t%10s\n", "currentSize", "tableSize");
+        printf("%35s\t%10s\n", "-----------", "---------");
+        
+        printf("HashMap : %25zu\t%10zu\n",myHash.currentSize, myHash.tableSize);
+        
         String numStr;
-        for(int i = 0; i < 120; i++)
+        
+        for(int i = 0; i < 250; i++)
         {
             char num[i + 2];
             
-            String * temp1 = (String*) malloc(sizeof(String));
+            String * item = (String*) malloc(sizeof(String));
             
-            String_New(temp1, "Hello ");
+            String_New(item, "FIU Computer Science ");
             
-            itoa(i, num);
+            intToChar(i, num);
             String_New(&numStr, num);
-            String_Cat(temp1,&numStr);
+            String_Cat(item,&numStr);
             
-            void * tempVoid = temp1;
-            
-            size_t * testHashCode = *(&tempVoid) + 16;
-            
-            
-            size_t test = *testHashCode;
-            
-            printf("%zu\n", test);
-            
-            if(Hash_Insert(myHash, temp1))
-                printf("Successful\n");
-            else
-                printf("Unsuccessful\n");
+            Hash_Insert(&myHash, item);
         }
     }
     
-    String * find = malloc(sizeof(String));
-    String_New(find, "Hello 99");
-    String * new = Hash_Get_Item(myHash, find);
+    printf("After Initialization: \n");
+    printf("---------------------\n");
     
-    printf("%s\n",new->str);
+    printf("%35s\t%10s\n", "currentSize", "tableSize");
+    printf("%35s\t%10s\n", "-----------", "---------");
     
-    if(Hash_Remove(myHash, find) && (new = Hash_Get_Item(myHash, find)))
-        printf("%s\n",new->str);
+    printf("HashMap : %25zu\t%10zu\n",myHash.currentSize, myHash.tableSize);
+    
+    
+    //End Create HashTable
+    
+    //HashMap_Get_Item
+    printf("\n%15s\n", "Hash_Get_Item");
+    printf("%15s\n\n", "------------");
+    
+    String * findItem = malloc(sizeof(String));
+    
+    String_New(findItem, "FIU Computer Science 130");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    
+    printf("To Find : %24s\t%6zu\t%8zu\n\n",findItem->str,findItem->size,findItem->hashcode);
+    
+    String * itemHash = Hash_Get_Item(&myHash, findItem);
+    
+    printf("Item found : %24s\t%6zu\t%8zu\n\n",itemHash->str,itemHash->size,itemHash->hashcode);
+    
+    
+    //End HashMap_Get_Item
+    
+    //HashMap Remove
+    
+    printf("\n%15s\n", "Hash_Remove");
+    printf("%15s\n\n", "----------");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    
+    printf("To remove : %24s\t%6zu\t%8zu\n\n",findItem->str,findItem->size,findItem->hashcode);
+    
+    if(Hash_Remove(&myHash, findItem) && (itemHash = Hash_Get_Item(&myHash, findItem)))
+        printf("didn't remove : %24s\t%6zu\t%8zu\n\n",findItem->str,
+               findItem->size,findItem->hashcode);
     else
-        printf("Remove successful\n");
-    String * newItem;
-    if(Hash_MakeEmpty(myHash))
-    {
-        for(size_t i = 0; i < myHash->tableSize; i++)
-        {
-            if((newItem = Hash_Get_Item_With_Index(myHash, &i)))
-               printf("Fail to Empty\n");
-            else
-               printf("HashMap Empty index %zu\n", i);
-        }
-    }    
+        printf("Output : Remove successful\n");    
+    
+    //End HashMap Remove
+    
+    //Hash_MakeEmpty
+    printf("\n%15s\n", "HashMap_MakeEmpty");
+    printf("%15s\n\n", "-----------------");
+    
+//    printf("Before MakeEmpty: \n");
+//    printf("---------------------\n");
+    
+    printf("%35s\t%10s\n", "currentSize", "tableSize");
+    printf("%35s\t%10s\n", "-----------", "---------");
+    
+    printf("Before : %25zu\t%10zu\n",myHash.currentSize, myHash.tableSize);
+    if(Hash_MakeEmpty(&myHash))
+        printf("After  : %25zu\t%10zu\n",myHash.currentSize, myHash.tableSize);
     else
-        printf("HashMap Empty Fail\n");
+        printf("HashMap_MakeEmpty Fail.\n");
+    
+    //End Hash_MakeEmpty
+
     
     return 0;
 }
 
- /*itoa: convert n to characters in s*/
-void itoa(int n, char s[])
+//itoa: convert n to characters in s
+void intToChar(int n, char s[])
 {
-    int i, sign;
-    if ((sign = n) < 0) /* record sign */
-        n = -n; /* make n positive */
+    int i;
+    
     i = 0;
-    do { /* generate digits in reverse order */
-        s[i++]=n%10+'0'; /*getnextdigit*/
+    do
+    {
+        s[i++] = n % 10 + '0';
+        
     } while ((n /= 10) > 0);
-    if (sign < 0)
-        s[i++] = '-';
+    
     s[i] = '\0';
+    
     reverse_C(s);
 }
 void reverse_C(char s[])
@@ -506,16 +952,17 @@ void reverse_C(char s[])
     char tmp;
     
     length = 0;
-    for (i = 0; s[i] != '\0'; i++) {
+    for (i = 0; s[i] != '\0'; i++)
+    {
         if (s[i] != '\n')
             length = i + 1;
     }
     
-    for (i = 0; i < length / 2; i++) {
+    for (i = 0; i < length / 2; i++)
+    {
         tmp = s[i];
         s[i] = s[length - i - 1];
         s[length - i - 1] = tmp;
     }
-    
 }
 

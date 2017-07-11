@@ -150,7 +150,6 @@ void String_SetChar(const String *strObj,const size_t index, const char c)
     
 }
 //***********************************************************************
-///Haven't finished
 String * String_Cpy ( String * destination, const String * source )
 {
     if(!destination || !source || !source->str)
@@ -179,6 +178,7 @@ String * String_nCpy ( String * destination, const String * source, size_t num )
         
         destination->size = num;
         destination->hashcode = String_CreateHash(destination->str);
+        destination->size = String_Len(destination);
         
         return destination;
     }
@@ -228,14 +228,13 @@ String * String_nCat ( String * destination, const String * source, size_t num )
         for(j = destination->size, k = 0; j < num && k < source->size; j++, k++)
             temp[j] = source->str[k];
         
-        destination->size = num;
+        destination->size = String_Len(destination);
         destination->hashcode = String_CreateHash(destination->str);
         
         return destination;
     }
     
-    return NULL;
-    
+    return NULL;    
 }
 //****************************************************************************
 int String_Cmp ( const String * str1, const String * str2 )
@@ -246,9 +245,9 @@ int String_Cmp ( const String * str1, const String * str2 )
     size_t size;
     
     if(str1->size > str2->size)
-         return 1;
+         size = str2->size;
     else if(str1->size < str2->size)
-        return -1;
+        size = str1->size;
     else
         size = str1->size;
     
@@ -260,6 +259,12 @@ int String_Cmp ( const String * str1, const String * str2 )
             return -1;
     }
     
+    if(str1->size > str2->size)
+            return 1;
+    else if(str1->size < str2->size)
+        return -1;
+    else
+        size = str1->size;
     return 0;
 }
 //*************************************************************************
@@ -443,7 +448,7 @@ size_t String_CreateHash(const char * str)
     size_t hashCode = 0;
     
     for(int i = 0; str[i] != '\0'; i++)
-        hashCode += (str[i] * (2 + i));
+        hashCode += (str[i] * (str[i] + i) * 7);
     return hashCode;
     
 }
@@ -505,8 +510,8 @@ String * String_RTrim(String * str)
 //************************************************************************
 size_t String_GetCharFromIndex(const String * str, int index)
 {
-    if(str && str->str && str->size <= index)
-        return str->str[index];
+    if(str && str->str && str->size >= index)
+        return (size_t)str->str[index];
     
     return 0;
 }
