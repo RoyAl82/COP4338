@@ -32,7 +32,7 @@ boolean ArrayList_Expand(ArrayList * list);
 boolean ArrayList_Add(ArrayList * list, void * item);
 
 void * ArrayList_GetList(ArrayList * list);
-inline size_t ArrayList_GetSize(ArrayList * list);
+size_t ArrayList_GetSize(ArrayList * list);
 
 //also need to define
 

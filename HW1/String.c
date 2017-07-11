@@ -7,7 +7,7 @@
 //
 
 #include <stdio.h>
-#include <stdLib.h>
+#include <stdlib.h>
 #include "String.h"
 
 
@@ -307,7 +307,7 @@ String * String_Chr (String * str, int character )
         temp->size = String_Len(temp);
         temp->hashcode = String_CreateHash(temp->str);
         
-        return (*temp->str == c) ? temp : (temp->str = '\0', temp);
+        return (*temp->str == c) ? temp : NULL; //(!(temp->str = '\0') ? temp : NULL);
     }
     
     return NULL;

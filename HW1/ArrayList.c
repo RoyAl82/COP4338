@@ -70,7 +70,7 @@ void * ArrayList_GetList(ArrayList * list)
     return NULL;
 }
 //******************************************************************
-inline size_t ArrayList_GetSize(ArrayList * list)
+size_t ArrayList_GetSize(ArrayList * list)
 {
     if(list)
         return list->size;
@@ -110,8 +110,7 @@ boolean ArrayList_RemoveLast(ArrayList *list) //remove last item and updates
 {
     if(list && list->arr && list->size > 0)
     {
-        if(ArrayList_Remove(list, list->size - 1))
-           return ArrayList_Compact(list);
+        return ArrayList_Remove(list, list->size - 1);
     }
     return FALSE;
 }

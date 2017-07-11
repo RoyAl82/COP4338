@@ -31,9 +31,9 @@ int String_EqualN(String * lhs, String * rhs,size_t n)
 
 int main(int argc, char **argv)
 {
-    String a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w;
+    String a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,s,t,u,v,w;
     
-    String title, title1;
+    String title, title1, title2, title3;
     
     String aa,bb,cc,dd,ee,ff,hh,ii;
     
@@ -209,8 +209,8 @@ int main(int argc, char **argv)
     
     printf("Is String 1 greater(1), equal(0), or less(-1) than String 2?\n");
     printf("------------------------------------------------------------\n");
-    size_t comp;
-    printf("String 1 is %s %s String 2\n", (((comp = String_Cmp(&i, &j)) == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), ((comp != 0) ? "than" : ""));
+    size_t comp = String_Cmp(&i, &j);
+    printf("String 1 is %s %s String 2\n", ((comp == 1) ? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), ((comp != 0) ? "than" : ""));
     
     String_New(&i, "Darth Vader");
     String_New(&j, "Darth Vader");
@@ -222,8 +222,8 @@ int main(int argc, char **argv)
     
     printf("Is String 1 greater(1), equal(0), or less(-1) than String 2?\n");
     printf("------------------------------------------------------------\n");
-   
-    printf("String 1 is %s %s String 2\n", (((comp = String_Cmp(&i, &j)) == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), (comp != 0) ? ("than") : (""));
+    comp = String_Cmp(&i, &j);
+    printf("String 1 is %s %s String 2\n", ((comp == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), (comp != 0) ? ("than") : (""));
     
     String_New(&i, "Gen. Greivous");
     String_New(&j, "Gen. Veers");
@@ -235,8 +235,8 @@ int main(int argc, char **argv)
     
     printf("Is String 1 greater(1), equal(0), or less(-1) than String 2?\n");
     printf("------------------------------------------------------------\n");
-   
-    printf("String 1 is %s %s String 2\n", (((comp = String_Cmp(&i, &j)) == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), ((comp != 0) ? "than" : ""));
+    comp = String_Cmp(&i, &j);
+    printf("String 1 is %s %s String 2\n", ((comp == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), ((comp != 0) ? "than" : ""));
     
     //End String_Cmp Function
     
@@ -255,7 +255,8 @@ int main(int argc, char **argv)
     
     printf("Is String 1 greater(1), equal(0), or less(-1) than String 2?\n");
     printf("------------------------------------------------------------\n");
-    printf("String 1 is %s %s String 2\n", (((comp = String_nCmp(&k, &l,NUM_OF_CHARACTERS_N_CMP)) == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), ((comp != 0) ? "than" : ""));
+    comp = String_nCmp(&k, &l,NUM_OF_CHARACTERS_N_CMP);
+    printf("String 1 is %s %s String 2\n", ((comp == 1)? "greater(1)": ((comp != 0)? "less(-1)": "equal(0)")), ((comp != 0) ? "than" : ""));
     
     //End String_nCmp Function
     
@@ -508,6 +509,14 @@ int main(int argc, char **argv)
     
     //**************************** ArrayList *******************************
     
+    String_New(&title2, "ArrayList");
+    
+    //Print Title
+    printf("\n\n\n");
+    printf("%40s\n", title2.str);
+    printf("%40s\n", "---------");
+    //End Title
+    
     ArrayList * strListA = (ArrayList *) malloc(sizeof(ArrayList));
     ArrayList * strListB = (ArrayList *) malloc(sizeof(ArrayList));
     
@@ -563,7 +572,7 @@ int main(int argc, char **argv)
     printf("%36s\t%s\t%5s\n", "------", "------", "--------");
     printf("ArrayList 1 member : %s\t%6zu\t%8zu\n",str1->str,str1->size,str1->hashcode);
     printf("ArrayList 2 member : %s\t%6zu\t%8zu\n\n",str2->str,str2->size,str2->hashcode);
-
+    
     //End ArrayList_Copy Function
     
     //ArrayList_Clear Function
@@ -573,8 +582,8 @@ int main(int argc, char **argv)
     printf("------------\n");
     printf("%35s\t%10s\n", "Size", "Reserved");
     printf("%35s\t%10s\n", "----", "--------");
-    printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
-    printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
+    printf("ArrayList 1: %22zu\t%10zu\n",ArrayList_GetSize(strListA),strListA->reserved);
+    printf("ArrayList 2: %22zu\t%10zu\n\n",ArrayList_GetSize(strListB),strListB->reserved);
     printf("After Clear: \n");
     printf("------------\n");
     printf("%35s\t%10s\n", "Size", "Reserved");
@@ -642,11 +651,11 @@ int main(int argc, char **argv)
     printf("-------------\n");
     printf("%35s\t%10s\n", "Size", "Reserved");
     printf("%35s\t%10s\n", "----", "--------");
-    
+    char num[10];
     for (int i = 0; i < ARRAYLIST_ADDING; i++)
     {
         String numStr;
-        char num[i + 2];
+        
         intToChar(i, num);
         String_New(&numStr, num);
         
@@ -669,8 +678,8 @@ int main(int argc, char **argv)
     for (int i = 0; i < ARRAYLIST_EXPAND; i++)
     {
         String numStr;
-        char num[i + 2];
-        intToChar(i, num);
+        
+        intToChar((int)strListB->size, num);
         String_New(&numStr, num);
         
         String * str = (String *)malloc(sizeof(String));
@@ -745,7 +754,6 @@ int main(int argc, char **argv)
     printf("%35s\t%10s\n", "----", "--------");
     printf("ArrayList 1: %22zu\t%10zu\n",strListA->size,strListA->reserved);
     printf("ArrayList 2: %22zu\t%10zu\n\n",strListB->size,strListB->reserved);
-    
         
     //End ArrayList_RemoveLast Function
     
@@ -774,27 +782,37 @@ int main(int argc, char **argv)
     
 //****************************** HashMap *******************************
     //Create HashTable
+    String_New(&title3, "HashMap");
+    
+    //Print Title
+    printf("\n\n\n");
+    printf("%40s\n", title3.str);
+    printf("%40s\n", "---------");
+    //End Title
+    
+    
+    printf("\n%15s\n", "HashMap New");
+    printf("%15s\n\n", "------------");
+    
+    printf("Before Initialization: \n");
+    printf("---------------------\n");
     
     HashMap myHash;
     
-    if(Hash_New(&myHash))
-    {
-        printf("\n%15s\n", "HashMap New");
-        printf("%15s\n\n", "-------------------");
-        
-        printf("Before Initialization: \n");
-        printf("---------------------\n");
-        
+    boolean test = Hash_New(&myHash);
+    
+    if(test)
+    {        
         printf("%35s\t%10s\n", "currentSize", "tableSize");
         printf("%35s\t%10s\n", "-----------", "---------");
         
-        printf("HashMap : %25zu\t%10zu\n",myHash.currentSize, myHash.tableSize);
+        printf("HashMap : %25zu\t%10zu\n\n",myHash.currentSize, myHash.tableSize);
         
         String numStr;
         
         for(int i = 0; i < 250; i++)
         {
-            char num[i + 2];
+            char num[10];
             
             String * item = (String*) malloc(sizeof(String));
             
@@ -814,7 +832,7 @@ int main(int argc, char **argv)
     printf("%35s\t%10s\n", "currentSize", "tableSize");
     printf("%35s\t%10s\n", "-----------", "---------");
     
-    printf("HashMap : %25zu\t%10zu\n",myHash.currentSize, myHash.tableSize);
+    printf("HashMap : %25zu\t%10zu\n\n",myHash.currentSize, myHash.tableSize);
     
     
     //End Create HashTable
@@ -830,11 +848,11 @@ int main(int argc, char **argv)
     printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
     printf("%36s\t%s\t%5s\n", "------", "------", "--------");
     
-    printf("To Find : %24s\t%6zu\t%8zu\n\n",findItem->str,findItem->size,findItem->hashcode);
+    printf("To Find : %26s\t%6zu\t%8zu\n\n",findItem->str,findItem->size,findItem->hashcode);
     
     String * itemHash = Hash_Get_Item(&myHash, findItem);
     
-    printf("Item found : %24s\t%6zu\t%8zu\n\n",itemHash->str,itemHash->size,itemHash->hashcode);
+    printf("Found   : %26s\t%6zu\t%8zu\n\n",itemHash->str,itemHash->size,itemHash->hashcode);
     
     
     //End HashMap_Get_Item
@@ -861,9 +879,6 @@ int main(int argc, char **argv)
     printf("\n%15s\n", "HashMap_MakeEmpty");
     printf("%15s\n\n", "-----------------");
     
-//    printf("Before MakeEmpty: \n");
-//    printf("---------------------\n");
-    
     printf("%35s\t%10s\n", "currentSize", "tableSize");
     printf("%35s\t%10s\n", "-----------", "---------");
     
@@ -875,6 +890,8 @@ int main(int argc, char **argv)
     
     //End Hash_MakeEmpty
 
+    
+    printf("\n\nTester Ended. Exiting.....\n");
     
     return 0;
 }

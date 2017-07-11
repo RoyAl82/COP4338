@@ -8,6 +8,7 @@
 
 #include "HashMap.h"
 #include <stdlib.h>
+#include "globalconst.h"
 
 
 //*****************************************************************************
@@ -17,13 +18,27 @@ boolean Hash_New(HashMap * myHash)
     {
         myHash->table = calloc(DEFAULT_TABLE_SIZE, sizeof(void *) * DEFAULT_TABLE_SIZE);
         
-        if(myHash->table)
+        if(myHash->table != NULL)
         {
             myHash->tableSize = DEFAULT_TABLE_SIZE;
             myHash->currentSize = 0;
             
             return TRUE;
         }
+    }
+    else if(myHash && myHash->table)
+    {
+        Hash_MakeEmpty(myHash);
+        myHash->table = calloc(DEFAULT_TABLE_SIZE, sizeof(void *) * DEFAULT_TABLE_SIZE);
+        
+        if(myHash->table != NULL)
+        {
+            myHash->tableSize = DEFAULT_TABLE_SIZE;
+            myHash->currentSize = 0;
+            
+            return TRUE;
+        }
+        
     }
     
     return FALSE;
