@@ -56,6 +56,10 @@ void * Hash_Get_Item_With_Index(HashMap * myHash, size_t * index);
 
 boolean Hash_Delete_HashMap(HashMap * myHash);
 
+void * Hash_Get_Item_By_HashCode(HashMap * myHash, const size_t * hashCode);
+
+boolean Hash_Compact(HashMap * myHash);
+
 size_t Hash_nextPrime(size_t n);
 
 boolean Hash_isPrime(size_t n);

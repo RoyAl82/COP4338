@@ -317,6 +317,74 @@ boolean Hash_Delete_HashMap(HashMap * myHash)
     
     return FALSE;
 }
+//****************************************************************************
+void * Hash_Get_Item_By_HashCode(HashMap * myHash, const size_t * hashCode)
+{
+    if(myHash && myHash->table)
+    {
+        
+        size_t hashIndex = (*hashCode) % myHash->tableSize;
+        
+        if(myHash->table[hashIndex])
+        {
+            
+            Item * temp = myHash->table[hashIndex];
+            
+            if(temp)
+            {
+                while(temp && (Hash_Get_HashCode(temp->item) != *hashCode))
+                {
+                    temp = temp->next;
+                }
+                
+                if(temp && Hash_Get_HashCode(temp->item) == *hashCode)
+                {
+                    return temp->item;
+                }
+            }
+
+        }
+    }   
+    
+    return NULL;
+}
+//***************************************************************************
+boolean Hash_Compact(HashMap * myHash)
+{
+    if(myHash && myHash->table && *myHash->table && myHash->currentSize < (myHash->tableSize - DEFAULT_TABLE_SIZE))
+    {
+//        int last = 0;
+//        
+//        for(int i = 0; myHash->currentSize > 0 && i < myHash->tableSize; i++)
+//            if(myHash->table[i])
+//                last = i;
+        
+        void * temp = realloc(myHash->table,sizeof(void *) * myHash->currentSize + DEFAULT_TABLE_SIZE);
+        
+        if(temp && myHash->currentSize > 0)
+        {
+            myHash->table = temp;
+            myHash->tableSize = myHash->currentSize + DEFAULT_TABLE_SIZE;
+            
+            return TRUE;
+        }
+    }
+    else if(myHash && myHash->table && !*myHash->table)
+    {
+        myHash->table = calloc(sizeof(void*), DEFAULT_TABLE_SIZE);
+        myHash->tableSize = DEFAULT_TABLE_SIZE;
+        
+        return TRUE;
+    }
+    else if(myHash && !myHash->table)
+    {
+        myHash->table = calloc(sizeof(void*), DEFAULT_TABLE_SIZE);
+        myHash->tableSize = DEFAULT_TABLE_SIZE;
+        myHash->currentSize = 0;
+        return TRUE;
+    }
+    return FALSE;
+}
 //***************************************************************************
 size_t Hash_nextPrime(size_t n)
 {

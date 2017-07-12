@@ -839,7 +839,7 @@ int main(int argc, char **argv)
     
     //HashMap_Get_Item
     printf("\n%15s\n", "Hash_Get_Item");
-    printf("%15s\n\n", "------------");
+    printf("%15s\n\n", "-------------");
     
     String * findItem = malloc(sizeof(String));
     
@@ -856,6 +856,27 @@ int main(int argc, char **argv)
     
     
     //End HashMap_Get_Item
+    
+    //HashMap_Get_Item_By_HashCode
+    
+    printf("\n%15s\n", "Hash_Get_Item_By_HashCode");
+    printf("%15s\n\n", "------------");
+    
+    findItem = malloc(sizeof(String));
+    
+    String_New(findItem, "FIU Computer Science 130");
+    
+    printf("%36s\t%s\t%5s\n", "String", "Length", "HashCode");
+    printf("%36s\t%s\t%5s\n", "------", "------", "--------");
+    
+    printf("To Find : %26s\t%6zu\t%8zu\n\n",findItem->str,findItem->size,findItem->hashcode);
+    
+    itemHash = Hash_Get_Item_By_HashCode(&myHash, &findItem->hashcode);
+    
+    printf("Found   : %26s\t%6zu\t%8zu\n\n",itemHash->str,itemHash->size,itemHash->hashcode);
+    
+    
+    //End HashMap_Get_Item_By_HashCode
     
     //HashMap Remove
     
@@ -886,10 +907,27 @@ int main(int argc, char **argv)
     if(Hash_MakeEmpty(&myHash))
         printf("After  : %25zu\t%10zu\n",myHash.currentSize, myHash.tableSize);
     else
-        printf("HashMap_MakeEmpty Fail.\n");
+        printf("HashMap_MakeEmpty Fails.\n");
     
     //End Hash_MakeEmpty
 
+    //HashMap Compact
+    printf("\n%15s\n", "HashMap_Compact");
+    printf("%15s\n\n", "-----------------");
+    
+    printf("%35s\t%10s\n", "currentSize", "tableSize");
+    printf("%35s\t%10s\n", "-----------", "---------");
+    
+    printf("Before : %25zu\t%10zu\n",myHash.currentSize, myHash.tableSize);
+    if(Hash_Compact(&myHash))
+        printf("After  : %25zu\t%10zu\n",myHash.currentSize, myHash.tableSize);
+    else
+        printf("HashMap_Compact Fails.\n");
+    
+    
+    
+    //End Hash Map
+    
     
     printf("\n\nTester Ended. Exiting.....\n");
     
